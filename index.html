@@ -21,6 +21,12 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* --- New Loader Animation --- */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
         /* --- General Styles --- */
         :root {
@@ -54,15 +60,7 @@
             box-sizing: border-box;
         }
         
-        /* --- Added Main Title --- */
-        .main-title {
-            font-family: 'Manrope', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary-color);
-            margin: 0 0 24px 0;
-            animation: fadeIn 0.6s ease-out;
-        }
+        /* --- Main Title is now part of the loading screen --- */
 
         /* --- Main Container --- */
         #app-container {
@@ -72,16 +70,47 @@
             width: 100%;
             max-width: 640px; /* Slightly wider */
             overflow: hidden;
-            animation: fadeIn 0.8s ease-out;
+            /* Set a min-height to prevent jank during loading */
+            min-height: 400px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         /* --- Helper class for screen transitions --- */
         .screen {
             display: none; /* All screens hidden by default */
+            width: 100%;
+            animation: fadeIn 0.4s ease-out;
         }
         .screen.is-visible {
             display: block;
-            animation: slideInUp 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        /* --- New Loading Screen --- */
+        #loading-screen {
+            padding: 32px;
+            text-align: center;
+        }
+        .loader-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 0 0 24px 0;
+        }
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+            border: 5px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        /* This will be shown by default, no .is-visible needed */
+        #loading-screen {
+            display: block;
         }
 
         /* --- 1. Quiz Screen (No longer has selection screen) --- */
@@ -154,8 +183,6 @@
             justify-content: flex-end; /* Changed from space-between */
             align-items: center;
         }
-        
-        /* Removed .secondary-btn styles as back-btn is gone */
         
         #submit-btn {
             font-family: 'Inter', sans-serif;
@@ -273,11 +300,17 @@
 </head>
 <body>
 
-    <h1 class="main-title">Quiz Master</h1>
+    <!-- Removed static h1 title -->
 
     <div id="app-container">
         
-        <!-- Screen 1: The Quiz (Selection screen is removed) -->
+        <!-- Screen 0: Loading Screen (New) -->
+        <div id="loading-screen" class="screen is-visible"> <!-- Visible by default -->
+            <h1 class="loader-title">Quiz Master</h1>
+            <div class="loader-spinner"></div>
+        </div>
+
+        <!-- Screen 1: The Quiz -->
         <div id="quiz-screen" class="screen">
             <div id="quiz-header">
                 <div id="question-image-container"></div>
@@ -287,7 +320,6 @@
                 <!-- Buttons will be dynamically inserted here -->
             </div>
             <div id="controls">
-                <!-- Removed the "Main Menu" button -->
                 <button id="submit-btn">Next</button>
             </div>
         </div>
@@ -299,7 +331,7 @@
             <h3>Solutions</h3>
             <div id="solutions-body"></div>
             <div id="results-controls">
-                <button id="restart-btn">Retake Test</button> <!-- Changed button text -->
+                <button id="restart-btn">Retake Test</button>
             </div>
         </div>
 
@@ -307,17 +339,16 @@
 
     <!-- 
       This is File 2. It MUST be in the same folder as this index.html file.
-      It's loaded here so the script below can access its data.
     -->
     <script src="questions.js"></script>
 
     <script>
-        // Wait for the HTML document and questions.js to be fully loaded
-        document.addEventListener('DOMContentLoaded', () => {
+        // *** MOVED all logic inside window.onload ***
+        // This waits for ALL files, including questions.js, to load
+        window.addEventListener('load', () => {
 
             // --- 1. GET DOM ELEMENTS ---
-            // const selectionScreen = document.getElementById('selection-screen'); // Removed
-            // const testList = document.getElementById('test-list'); // Removed
+            const loadingScreen = document.getElementById('loading-screen'); // New
             const quizScreen = document.getElementById('quiz-screen');
             const resultsContainer = document.getElementById('results-container');
             
@@ -326,7 +357,6 @@
             const answerButtonsElement = document.getElementById('answer-buttons');
             
             const submitButton = document.getElementById('submit-btn');
-            // const backButton = document.getElementById('back-btn'); // Removed
             const restartButton = document.getElementById('restart-btn');
             
             const scoreText = document.getElementById('score-text');
@@ -334,7 +364,7 @@
             
             // --- Helper for screen elements ---
             const screens = {
-                // selection: selectionScreen, // Removed
+                loading: loadingScreen, // New
                 quiz: quizScreen,
                 results: resultsContainer
             };
@@ -348,7 +378,9 @@
             function init() {
                 // Check if the 'quizQuestions' variable exists from questions.js
                 if (typeof quizQuestions === 'undefined' || quizQuestions.length === 0) {
-                    quizScreen.innerHTML = "<h2>Error: Could not load <code>questions.js</code></h2><p>Please make sure the file is in the same folder as <code>index.html</code> and is not empty.</p>";
+                    // Show an error *inside* the loading screen area
+                    loadingScreen.innerHTML = "<h2>Error: Could not load <code>questions.js</code></h2><p>Please make sure the file is in the same folder as <code>index.html</code> and is not empty.</p>";
+                    showScreen('loading'); // Keep the loading screen visible to show the error
                     return;
                 }
                 
@@ -368,19 +400,15 @@
                 const targetScreen = screens[screenName];
                 if (targetScreen) {
                     targetScreen.style.display = 'block';
-                    // We use a tiny timeout to ensure the 'display: block' applies
-                    // *before* the animation class is added, allowing the animation to run.
                     setTimeout(() => {
                          targetScreen.classList.add('is-visible');
-                    }, 10);
+                    }, 10); // Tiny timeout to ensure animation runs
                 }
             }
 
             // --- 4. QUIZ FUNCTIONS ---
             
-            // *** UPDATED startQuiz function ***
             function startQuiz() {
-                // No event.target, just load the global 'quizQuestions'
                 currentQuizQuestions = quizQuestions;
                 userAnswers = new Array(currentQuizQuestions.length).fill(null);
                 currentQuestionIndex = 0;
@@ -389,9 +417,7 @@
                 showQuestion(currentQuizQuestions[currentQuestionIndex]);
             }
 
-            // *** UPDATED showQuestion for fade transition ***
             function showQuestion(question) {
-                // Grab the elements to animate
                 const contentToAnimate = [quizHeader, answerButtonsElement];
                 
                 // 1. Fade out
@@ -458,7 +484,6 @@
 
 
             function selectAnswer(e) {
-                // Find the button, even if the user clicked on the text or image inside it
                 const selectedButton = e.target.closest('.btn'); 
                 const selectedIndex = parseInt(selectedButton.dataset.index);
                 
@@ -539,14 +564,10 @@
 
             // --- 5. EVENT LISTENERS ---
             submitButton.addEventListener('click', handleSubmit);
-            
-            // backButton listener removed
-            
-            // Restart button now calls startQuiz directly
             restartButton.addEventListener('click', startQuiz);
             
             // --- 6. START THE APP ---
-            init(); // This will now automatically start the quiz
+            init(); // This will now run after questions.js is loaded
         });
     </script>
 
