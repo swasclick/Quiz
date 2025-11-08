@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Quiz</title>
+    <title>Quiz App</title>
     <style>
+        /* --- General Styles --- */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #f4f7f6;
@@ -14,22 +15,70 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            padding: 16px;
+            box-sizing: border-box;
         }
-        #quiz-container {
+
+        /* --- Main Container --- */
+        #app-container {
             background-color: #ffffff;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            width: 90%;
+            width: 100%;
             max-width: 600px;
             overflow: hidden;
+        }
+
+        /* --- 1. Test Selection Menu --- */
+        #selection-screen {
+            padding: 24px;
+        }
+        #selection-screen h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+        #test-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .test-btn {
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+        .test-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* --- 2. Quiz Screen --- */
+        #quiz-screen {
+            display: none; /* Hidden by default */
         }
         #quiz-header {
             padding: 24px;
         }
+        #question-image-container {
+            margin-bottom: 16px;
+        }
+        #question-image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
         #question-text {
             font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin: 0;
         }
         #answer-buttons {
             display: flex;
@@ -48,6 +97,16 @@
             cursor: pointer;
             text-align: left;
             transition: background-color 0.2s, border-color 0.2s;
+            /* For answer images */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .btn img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-top: 10px;
         }
         .btn:hover {
             background-color: #e6e6e6;
@@ -62,7 +121,24 @@
             padding: 24px;
             background-color: #fafafa;
             border-top: 1px solid #eee;
-            text-align: right;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #back-btn {
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: #f0f0f0;
+            color: #555;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #back-btn:hover {
+            background-color: #e0e0e0;
         }
         #submit-btn {
             font-family: inherit;
@@ -79,8 +155,11 @@
         #submit-btn:hover {
             background-color: #1d4ed8;
         }
+
+        /* --- 3. Results Screen --- */
         #results-container {
             padding: 24px;
+            display: none; /* Hidden by default */
         }
         #results-container h2 {
             margin-top: 0;
@@ -95,6 +174,12 @@
         .solution p {
             margin: 0 0 8px 0;
         }
+        .solution img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
         .correct {
             color: #16a34a;
             font-weight: 600;
@@ -103,190 +188,288 @@
             color: #dc2626;
             font-weight: 600;
         }
+        #results-controls {
+            padding: 24px;
+            background-color: #fafafa;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        #restart-btn {
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #restart-btn:hover {
+            background-color: #1d4ed8;
+        }
     </style>
 </head>
 <body>
 
-    <div id="quiz-container">
-        <div id="quiz-header">
-            <h2 id="question-text">Question goes here</h2>
-        </div>
-        <div id="answer-buttons">
+    <div id="app-container">
+        
+        <!-- Screen 1: Test Selection Menu -->
+        <div id="selection-screen">
+            <h2>Select a Test</h2>
+            <div id="test-list">
+                <!-- Buttons will be dynamically inserted here -->
             </div>
-        <div id="controls">
-            <button id="submit-btn">Submit Test</button>
         </div>
-        <div id="results-container" style="display: none;">
+
+        <!-- Screen 2: The Quiz -->
+        <div id="quiz-screen">
+            <div id="quiz-header">
+                <div id="question-image-container"></div>
+                <h2 id="question-text">Question goes here</h2>
+            </div>
+            <div id="answer-buttons">
+                <!-- Buttons will be dynamically inserted here -->
+            </div>
+            <div id="controls">
+                <button id="back-btn">Main Menu</button>
+                <button id="submit-btn">Next</button>
+            </div>
+        </div>
+
+        <!-- Screen 3: The Results -->
+        <div id="results-container">
             <h2>Your Results</h2>
             <p id="score-text">You scored 0 out of 0.</p>
             <h3>Solutions</h3>
             <div id="solutions-body"></div>
+            <div id="results-controls">
+                <button id="restart-btn">Back to Main Menu</button>
+            </div>
         </div>
+
     </div>
 
+    <!-- 
+      This is File 2. It MUST be in the same folder as this index.html file.
+      It's loaded here so the script below can access its data.
+    -->
+    <script src="questions.js"></script>
+
     <script>
-        // --- 1. YOUR QUESTIONS ---
-        // Add your questions, options, and correct answer (index) here.
-        const quizQuestions = [
-            {
-                question: "What does 'CAD' stand for in CAD/CAM?",
-                options: [
-                    "Computer-Aided Design",
-                    "Computer-Assisted Data",
-                    "Computer-Algorithm Design",
-                    "Control and Automation Device"
-                ],
-                correctAnswer: 0,
-                solution: "'CAD' stands for Computer-Aided Design. It involves using computers to assist in the creation, modification, analysis, or optimization of a design."
-            },
-            {
-                question: "Which of the following is NOT a type of gear?",
-                options: [
-                    "Spur Gear",
-                    "Helical Gear",
-                    "Bevel Gear",
-                    "Piston Gear"
-                ],
-                correctAnswer: 3,
-                solution: "A Piston is a component of reciprocating engines, pumps, etc. Spur, Helical, and Bevel are all common types of gears used to transmit motion and power."
-            },
-            {
-                question: "What is the primary purpose of a 'bearing' in a machine?",
-                options: [
-                    "To increase friction",
-                    "To generate heat",
-                    "To reduce friction between moving parts",
-                    "To connect two static parts"
-                ],
-                correctAnswer: 2,
-                solution: "Bearings are mechanical elements that constrain relative motion to only the desired motion, and they reduce friction between moving parts."
-            }
-        ];
-        // --------------------------
+        // Wait for the HTML document and questions.js to be fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
 
-        const questionTextElement = document.getElementById('question-text');
-        const answerButtonsElement = document.getElementById('answer-buttons');
-        const submitButton = document.getElementById('submit-btn');
-        const resultsContainer = document.getElementById('results-container');
-        const scoreText = document.getElementById('score-text');
-        const solutionsBody = document.getElementById('solutions-body');
-        const quizHeader = document.getElementById('quiz-header');
-
-        let currentQuestionIndex = 0;
-        let userAnswers = new Array(quizQuestions.length).fill(null);
-
-        function startQuiz() {
-            currentQuestionIndex = 0;
-            submitButton.textContent = "Next";
-            showQuestion(quizQuestions[currentQuestionIndex]);
-        }
-
-        function showQuestion(question) {
-            questionTextElement.textContent = `Q${currentQuestionIndex + 1}: ${question.question}`;
-            answerButtonsElement.innerHTML = ''; // Clear old buttons
-
-            question.options.forEach((option, index) => {
-                const button = document.createElement('button');
-                button.textContent = option;
-                button.classList.add('btn');
-                button.dataset.index = index;
-                
-                // Highlight if it was the selected answer
-                if (userAnswers[currentQuestionIndex] === index) {
-                    button.classList.add('selected');
-                }
-
-                button.addEventListener('click', selectAnswer);
-                answerButtonsElement.appendChild(button);
-            });
-
-            // Update button text on the last question
-            if (currentQuestionIndex === quizQuestions.length - 1) {
-                submitButton.textContent = "Submit Test";
-            } else {
-                submitButton.textContent = "Next";
-            }
-        }
-
-        function selectAnswer(e) {
-            const selectedButton = e.target;
-            const selectedIndex = parseInt(selectedButton.dataset.index);
+            // --- 1. GET DOM ELEMENTS ---
+            const selectionScreen = document.getElementById('selection-screen');
+            const testList = document.getElementById('test-list');
+            const quizScreen = document.getElementById('quiz-screen');
+            const resultsContainer = document.getElementById('results-container');
             
-            // Store the user's answer
-            userAnswers[currentQuestionIndex] = selectedIndex;
+            const questionTextElement = document.getElementById('question-text');
+            const questionImageContainer = document.getElementById('question-image-container');
+            const answerButtonsElement = document.getElementById('answer-buttons');
+            
+            const submitButton = document.getElementById('submit-btn');
+            const backButton = document.getElementById('back-btn');
+            const restartButton = document.getElementById('restart-btn');
+            
+            const scoreText = document.getElementById('score-text');
+            const solutionsBody = document.getElementById('solutions-body');
 
-            // Update visual selection
-            Array.from(answerButtonsElement.children).forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            selectedButton.classList.add('selected');
-        }
+            // --- 2. QUIZ STATE VARIABLES ---
+            let currentQuizQuestions = [];
+            let currentQuestionIndex = 0;
+            let userAnswers = [];
 
-        function handleSubmit() {
-            // Check if an answer was selected
-            if (userAnswers[currentQuestionIndex] === null) {
-                alert("Please select an answer before proceeding.");
-                return;
-            }
-
-            // Move to the next question
-            if (currentQuestionIndex < quizQuestions.length - 1) {
-                currentQuestionIndex++;
-                showQuestion(quizQuestions[currentQuestionIndex]);
-            } else {
-                // End of quiz - show results
-                showResults();
-            }
-        }
-
-        function showResults() {
-            let score = 0;
-            solutionsBody.innerHTML = ''; // Clear old solutions
-
-            quizQuestions.forEach((question, index) => {
-                const userAnswerIndex = userAnswers[index];
-                const correctAnswerIndex = question.correctAnswer;
-                const isCorrect = userAnswerIndex === correctAnswerIndex;
-
-                if (isCorrect) {
-                    score++;
-                }
-
-                // Create solution block
-                const solutionElement = document.createElement('div');
-                solutionElement.classList.add('solution');
-
-                let solutionHTML = `
-                    <p><strong>Q${index + 1}: ${question.question}</strong></p>
-                `;
-
-                if (isCorrect) {
-                    solutionHTML += `
-                        <p class="correct">Your answer: ${question.options[userAnswerIndex]}</p>
-                    `;
-                } else {
-                    solutionHTML += `
-                        <p class="incorrect">Your answer: ${userAnswerIndex === null ? 'No answer' : question.options[userAnswerIndex]}</p>
-                        <p class="correct">Correct answer: ${question.options[correctAnswerIndex]}</p>
-                    `;
+            // --- 3. INITIALIZATION ---
+            function init() {
+                // Check if the 'allQuizData' variable exists from questions.js
+                if (typeof allQuizData === 'undefined') {
+                    selectionScreen.innerHTML = "<h2>Error: Could not load <code>questions.js</code></h2><p>Please make sure the file is in the same folder as <code>index.html</code>.</p>";
+                    return;
                 }
                 
-                solutionHTML += `<p><em>${question.solution}</em></p>`;
-                solutionElement.innerHTML = solutionHTML;
-                solutionsBody.appendChild(solutionElement);
-            });
+                // Create buttons for each test defined in questions.js
+                testList.innerHTML = ''; // Clear any loading text
+                const testKeys = Object.keys(allQuizData);
+                
+                if (testKeys.length === 0) {
+                     testList.innerHTML = "<p>No tests found in <code>questions.js</code>.</p>";
+                     return;
+                }
 
-            // Hide quiz, show results
-            quizHeader.style.display = 'none';
-            answerButtonsElement.style.display = 'none';
-            document.getElementById('controls').style.display = 'none';
-            resultsContainer.style.display = 'block';
+                testKeys.forEach(testKey => {
+                    const button = document.createElement('button');
+                    button.textContent = allQuizData[testKey].title; // Use the 'title' from the data
+                    button.classList.add('test-btn');
+                    button.dataset.testKey = testKey; // Store the key (e.g., "test1")
+                    button.addEventListener('click', startQuiz);
+                    testList.appendChild(button);
+                });
+                
+                showScreen('selection');
+            }
+            
+            function showScreen(screenName) {
+                selectionScreen.style.display = 'none';
+                quizScreen.style.display = 'none';
+                resultsContainer.style.display = 'none';
+                
+                if (screenName === 'selection') {
+                    selectionScreen.style.display = 'block';
+                } else if (screenName === 'quiz') {
+                    quizScreen.style.display = 'block';
+                } else if (screenName === 'results') {
+                    resultsContainer.style.display = 'block';
+                }
+            }
 
-            scoreText.textContent = `You scored ${score} out of ${quizQuestions.length}.`;
-        }
+            // --- 4. QUIZ FUNCTIONS ---
+            function startQuiz(event) {
+                const testKey = event.target.dataset.testKey;
+                currentQuizQuestions = allQuizData[testKey].questions;
+                userAnswers = new Array(currentQuizQuestions.length).fill(null);
+                currentQuestionIndex = 0;
+                
+                showScreen('quiz');
+                showQuestion(currentQuizQuestions[currentQuestionIndex]);
+            }
 
-        submitButton.addEventListener('click', handleSubmit);
-        startQuiz();
+            function showQuestion(question) {
+                // Set question text
+                questionTextElement.textContent = `Q${currentQuestionIndex + 1}: ${question.question}`;
+                
+                // Handle Question Image
+                questionImageContainer.innerHTML = '';
+                if (question.questionImage) {
+                    const img = document.createElement('img');
+                    img.src = question.questionImage;
+                    img.alt = "Question image";
+                    questionImageContainer.appendChild(img);
+                }
+
+                // Clear old buttons
+                answerButtonsElement.innerHTML = ''; 
+
+                // Create new buttons for options
+                question.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.classList.add('btn');
+                    button.dataset.index = index;
+                    
+                    // Add answer text
+                    const textSpan = document.createElement('span');
+                    textSpan.textContent = option.text;
+                    button.appendChild(textSpan);
+                    
+                    // Add answer image if it exists
+                    if (option.image) {
+                        const img = document.createElement('img');
+                        img.src = option.image;
+                        img.alt = "Answer image";
+                        button.appendChild(img);
+                    }
+
+                    if (userAnswers[currentQuestionIndex] === index) {
+                        button.classList.add('selected');
+                    }
+
+                    button.addEventListener('click', selectAnswer);
+                    answerButtonsElement.appendChild(button);
+                });
+
+                // Update button text
+                if (currentQuestionIndex === currentQuizQuestions.length - 1) {
+                    submitButton.textContent = "Submit Test";
+                } else {
+                    submitButton.textContent = "Next";
+                }
+            }
+
+            function selectAnswer(e) {
+                // Find the button, even if the user clicked on the text or image inside it
+                const selectedButton = e.target.closest('.btn'); 
+                const selectedIndex = parseInt(selectedButton.dataset.index);
+                
+                userAnswers[currentQuestionIndex] = selectedIndex;
+
+                Array.from(answerButtonsElement.children).forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                selectedButton.classList.add('selected');
+            }
+
+            function handleSubmit() {
+                if (userAnswers[currentQuestionIndex] === null) {
+                    alert("Please select an answer before proceeding.");
+                    return;
+                }
+
+                if (currentQuestionIndex < currentQuizQuestions.length - 1) {
+                    currentQuestionIndex++;
+                    showQuestion(currentQuizQuestions[currentQuestionIndex]);
+                } else {
+                    showResults();
+                }
+            }
+
+            function showResults() {
+                let score = 0;
+                solutionsBody.innerHTML = ''; 
+
+                currentQuizQuestions.forEach((question, index) => {
+                    const userAnswerIndex = userAnswers[index];
+                    const correctAnswerIndex = question.correctAnswer;
+                    const isCorrect = userAnswerIndex === correctAnswerIndex;
+
+                    if (isCorrect) {
+                        score++;
+                    }
+
+                    const solutionElement = document.createElement('div');
+                    solutionElement.classList.add('solution');
+                    
+                    let solutionHTML = `<p><strong>Q${index + 1}: ${question.question}</strong></p>`;
+
+                    // Display user's answer
+                    const userAnswer = question.options[userAnswerIndex];
+                    if (isCorrect) {
+                        solutionHTML += `
+                            <p class="correct">Your answer: ${userAnswer ? userAnswer.text : 'No answer'}</p>
+                        `;
+                    } else {
+                        solutionHTML += `
+                            <p class="incorrect">Your answer: ${userAnswer ? userAnswer.text : 'No answer'}</p>
+                            <p class="correct">Correct answer: ${question.options[correctAnswerIndex].text}</p>
+                        `;
+                    }
+                    
+                    // Add solution text and image
+                    solutionHTML += `<p><em>${question.solution.text}</em></p>`;
+                    if (question.solution.image) {
+                        solutionHTML += `<img src="${question.solution.image}" alt="Solution image">`;
+                    }
+
+                    solutionElement.innerHTML = solutionHTML;
+                    solutionsBody.appendChild(solutionElement);
+                });
+
+                showScreen('results');
+                scoreText.textContent = `You scored ${score} out of ${currentQuizQuestions.length}.`;
+            }
+
+            // --- 5. EVENT LISTENERS ---
+            submitButton.addEventListener('click', handleSubmit);
+            
+            // Add listeners for the "Back to Menu" buttons
+            backButton.addEventListener('click', init);
+            restartButton.addEventListener('click', init);
+            
+            // --- 6. START THE APP ---
+            init();
+        });
     </script>
 
 </body>
