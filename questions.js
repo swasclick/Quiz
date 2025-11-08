@@ -1,6 +1,6 @@
 // This global variable holds all your quiz data.
 // 'index.html' will read this variable.
-const allQuizData = {
+const quizQuestions = {
         "title": "Mechanical Basics Test",
         "questions": [
             {
