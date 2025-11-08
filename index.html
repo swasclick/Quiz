@@ -3,636 +3,378 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz App | Modern UI</title>
-    
-    <!-- Added Google Fonts: Manrope (for titles) and Inter (for body) -->
+    <title>QUIZ</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font (Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- Keyframe Animations --- */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* --- New Loader Animation --- */
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* --- General Styles --- */
-        :root {
-            --primary-color: #4f46e5; /* Indigo */
-            --primary-hover: #4338ca;
-            --light-bg: #f8f9fa;
-            --dark-text: #111827;
-            --light-text: #4b5563;
-            --border-color: #e5e7eb;
-            --correct-bg: #ecfdf5;
-            --correct-border: #a7f3d0;
-            --correct-text: #059669;
-            --incorrect-bg: #fef2f2;
-            --incorrect-border: #fecaca;
-            --incorrect-text: #e11d48;
-        }
-
+        /* Base styles */
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            /* Added a subtle gradient background */
-            background-color: #f0f2f5;
-            background-image: linear-gradient(170deg, #f8f9fa 0%, #e9ecef 100%);
-            color: var(--dark-text);
-            display: flex;
-            flex-direction: column; /* Centering title and container */
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 16px;
-            box-sizing: border-box;
-        }
-        
-        /* --- Main Title is now part of the loading screen --- */
-
-        /* --- Main Container --- */
-        #app-container {
-            background-color: #ffffff;
-            border-radius: 16px; /* Increased rounding */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            max-width: 640px; /* Slightly wider */
-            overflow: hidden;
-            /* Set a min-height to prevent jank during loading */
-            min-height: 400px; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        /* --- Helper class for screen transitions --- */
-        .screen {
-            display: none; /* All screens hidden by default */
-            width: 100%;
-        }
-        .screen.is-visible {
-            display: block;
-            animation: fadeIn 0.4s ease-out; /* Use a consistent fade in */
-        }
-        
-        /* --- New Loading Screen --- */
-        #loading-screen {
-            padding: 32px;
-            text-align: center;
-        }
-        .loader-title {
-            font-family: 'Manrope', sans-serif;
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--primary-color);
-            margin: 0 0 24px 0;
-        }
-        .loader-spinner {
-            width: 48px;
-            height: 48px;
-            border: 5px solid var(--border-color);
-            border-top-color: var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        /* This will be shown by default */
-        #loading-screen {
-            display: block;
-        }
-
-        /* --- 1. Quiz Screen (No longer has selection screen) --- */
-        #quiz-header {
-            padding: 32px 32px 24px 32px;
-        }
-        #question-image-container {
-            margin-bottom: 20px;
-        }
-        #question-image-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 12px;
-            display: block;
-            border: 1px solid var(--border-color);
-        }
-        #question-text {
-            font-family: 'Manrope', sans-serif;
-            font-size: 1.5rem; /* Larger question text */
-            font-weight: 700;
-            line-height: 1.4;
-            margin: 0;
-        }
-        #answer-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding: 0 32px 32px 32px;
-        }
-        .btn {
             font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            font-weight: 500;
-            background-color: #fff;
-            color: var(--dark-text);
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
-            cursor: pointer;
-            text-align: left;
-            transition: all 0.2s ease-out;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+            background-color: #111827; /* bg-gray-900 */
+            color: #f3f4f6; /* text-gray-100 */
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            /* Adding a subtle gradient background */
+            background-image: radial-gradient(circle at 1% 1%, rgba(55, 65, 81, 0.4) 0%, rgba(17, 24, 39, 0) 25%),
+                              radial-gradient(circle at 99% 99%, rgba(55, 48, 163, 0.3) 0%, rgba(17, 24, 39, 0) 25%);
         }
-        .btn img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-top: 12px;
+
+        /* Glassmorphism class */
+        .glass {
+            background: rgba(31, 41, 55, 0.6); /* bg-gray-800 with opacity */
+            backdrop-filter: blur(12px) saturate(150%);
+            -webkit-backdrop-filter: blur(12px) saturate(150%);
+            border-radius: 1rem; /* rounded-2xl */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Custom styled radio button */
+        .radio-label {
+            background-color: rgba(55, 65, 81, 0.7); /* bg-gray-700 with opacity */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-label:hover {
+            background-color: rgba(75, 85, 99, 0.8); /* bg-gray-600 with opacity */
+        }
+        
+        /* Style for when radio is checked */
+        input[type="radio"]:checked + .radio-label {
+            background-color: rgba(59, 130, 246, 0.7); /* bg-blue-600 with opacity */
+            border-color: rgba(59, 130, 246, 0.9);
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        /* Hide the actual radio button */
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* Button styles */
+        .btn {
+            background: rgba(59, 130, 246, 0.7); /* bg-blue-600 with opacity */
+            border: 1px solid rgba(59, 130, 246, 0.9);
+            transition: all 0.3s ease;
         }
         .btn:hover {
-            background-color: var(--light-bg);
-            border-color: #cdd2d8;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: rgba(37, 99, 235, 0.8); /* bg-blue-700 with opacity */
         }
-        .btn.selected {
-            background-color: #eef2ff; /* Lighter indigo bg */
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
-        }
-        #controls {
-            padding: 24px 32px;
-            background-color: var(--light-bg);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: flex-end; /* Changed from space-between */
-            align-items: center;
+        .btn:disabled {
+            background: rgba(75, 85, 99, 0.5); /* bg-gray-600 with opacity */
+            border-color: rgba(75, 85, 99, 0.7);
+            cursor: not-allowed;
         }
         
-        #submit-btn {
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 12px 24px;
-            cursor: pointer;
-            transition: all 0.2s ease-out;
+        .btn-secondary {
+            background: rgba(75, 85, 99, 0.7); /* bg-gray-600 with opacity */
+            border: 1px solid rgba(75, 85, 99, 0.9);
         }
-        #submit-btn:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
-        }
-
-        /* --- 2. Results Screen --- */
-        #results-container {
-            padding: 32px;
-        }
-        #results-container h2 {
-            font-family: 'Manrope', sans-serif;
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-top: 0;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-        #score-text {
-            font-size: 1.25rem;
-            font-weight: 600;
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 24px;
-        }
-        #results-container h3 {
-             font-family: 'Manrope', sans-serif;
-             font-size: 1.25rem;
-             border-bottom: 2px solid var(--border-color);
-             padding-bottom: 8px;
-             margin-bottom: 16px;
-        }
-        .solution {
-            background-color: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-        .solution p {
-            margin: 0 0 10px 0;
-            line-height: 1.6;
-        }
-        .solution p:last-child {
-            margin-bottom: 0;
-        }
-        .solution strong {
-            color: var(--dark-text);
-        }
-        .solution em { /* Solution text */
-            color: var(--light-text);
-            font-style: normal;
-        }
-        .solution img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-top: 10px;
-            border: 1px solid var(--border-color);
-        }
-        .correct {
-            font-weight: 600;
-            color: var(--correct-text);
-            background-color: var(--correct-bg);
-            border: 1px solid var(--correct-border);
-            padding: 8px 12px;
-            border-radius: 8px;
-        }
-        .incorrect {
-            font-weight: 600;
-            color: var(--incorrect-text);
-            background-color: var(--incorrect-bg);
-            border: 1px solid var(--incorrect-border);
-            padding: 8px 12px;
-            border-radius: 8px;
-        }
-        #results-controls {
-            padding: 24px 32px;
-            background-color: var(--light-bg);
-            border-top: 1px solid var(--border-color);
-            text-align: center;
+        .btn-secondary:hover {
+            background: rgba(55, 65, 81, 0.8); /* bg-gray-700 with opacity */
         }
         
-        #restart-btn {
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 12px 24px;
-            cursor: pointer;
-            transition: all 0.2s ease-out;
+        .btn-submit {
+             background: rgba(22, 163, 74, 0.7); /* bg-green-600 with opacity */
+            border: 1px solid rgba(22, 163, 74, 0.9);
         }
-        #restart-btn:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
+        .btn-submit:hover {
+            background: rgba(21, 128, 61, 0.8); /* bg-green-700 with opacity */
+        }
+        
+        /* Utility class to hide elements */
+        .hidden {
+            display: none;
+        }
+        
+        /* Solution styles */
+        .solution-correct {
+            border-left: 4px solid #16a34a; /* border-green-600 */
+            background-color: rgba(22, 163, 74, 0.1);
+        }
+        
+        .solution-incorrect {
+            border-left: 4px solid #dc2626; /* border-red-600 */
+            background-color: rgba(220, 38, 38, 0.1);
         }
     </style>
 </head>
-<body>
+<body class="antialiased">
 
-    <div id="app-container">
+    <!-- Main App Container -->
+    <div id="app" class="w-full max-w-2xl">
+    
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="glass w-full p-6 md:p-8 rounded-2xl">
+            <h1 class="text-3xl font-bold text-center mb-6 text-white">QUIZ</h1>
+            
+            <!-- Question Area -->
+            <div id="question-area" class="mb-6">
+                <div class="text-xl md:text-2xl font-semibold text-gray-100 mb-2" id="question-number">Question 1/10</div>
+                <p class="text-lg md:text-xl text-gray-200" id="question-text">Loading question...</p>
+            </div>
+            
+            <!-- Options Area -->
+            <div id="options-area" class="space-y-4 mb-8">
+                <!-- Options will be dynamically inserted here -->
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between items-center">
+                <button id="prev-btn" class="btn-secondary text-white font-semibold py-2 px-5 rounded-lg">
+                    Previous
+                </button>
+                <button id="next-btn" class="btn text-white font-semibold py-2 px-5 rounded-lg">
+                    Next
+                </button>
+                <button id="submit-btn" class="btn-submit hidden text-white font-bold py-2 px-5 rounded-lg">
+                    Submit
+                </button>
+            </div>
+        </div>
         
-        <!-- Screen 0: Loading Screen (New) -->
-        <div id="loading-screen" class="screen is-visible"> <!-- Visible by default -->
-            <h1 class="loader-title">Quiz Master</h1>
-            <div class="loader-spinner"></div>
+        <!-- Results Container -->
+        <div id="results-container" class="glass hidden w-full p-6 md:p-8 rounded-2xl">
+            <h2 class="text-3xl font-bold text-center mb-4 text-white">Quiz Completed!</h2>
+            <p id="score-text" class="text-2xl text-center font-semibold mb-6 text-blue-300">Your Score: 0 / 0</p>
+            
+            <h3 class="text-2xl font-semibold mb-4 text-white">Solutions Review</h3>
+            <div id="solutions-area" class="space-y-6 max-h-96 overflow-y-auto pr-2">
+                <!-- Solutions will be dynamically inserted here -->
+            </div>
+            
+            <button id="restart-btn" class="btn w-full mt-8 text-white font-bold py-3 px-5 rounded-lg">
+                Restart Quiz
+            </button>
         </div>
-
-        <!-- Screen 1: The Quiz -->
-        <div id="quiz-screen" class="screen">
-            <div id="quiz-header">
-                <div id="question-image-container"></div>
-                <h2 id="question-text">Question goes here</h2>
-            </div>
-            <div id="answer-buttons">
-                <!-- Buttons will be dynamically inserted here -->
-            </div>
-            <div id="controls">
-                <button id="submit-btn">Next</button>
-            </div>
-        </div>
-
-        <!-- Screen 2: The Results -->
-        <div id="results-container" class="screen">
-            <h2>Your Results</h2>
-            <p id="score-text">You scored 0 out of 0.</p>
-            <h3>Solutions</h3>
-            <div id="solutions-body"></div>
-            <div id="results-controls">
-                <button id="restart-btn">Retake Test</button>
-            </div>
-        </div>
-
+        
     </div>
 
-    <!-- The <script src="questions.js"></script> is GONE -->
-
     <script>
-        // --- 1. YOUR QUESTIONS GO HERE ---
-        // This is the *only* block you need to edit.
-        // Just add new question objects {} to this 'quizQuestions' array.
-        const quizQuestions = [
+        // --- EDIT YOUR QUESTIONS HERE ---
+        const questions = [
             {
-                "question": "What does 'CAD' stand for in CAD/CAM?",
-                "questionImage": null,
-                "options": [
-                    { "text": "Computer-Aided Design", "image": null },
-                    { "text": "Computer-Assisted Data", "image": null },
-                    { "text": "Computer-Algorithm Design", "image": null },
-                    { "text": "Control and Automation Device", "image": null }
-                ],
-                "correctAnswer": 0,
-                "solution": {
-                    "text": "'CAD' stands for Computer-Aided Design. It involves using computers to assist in the creation, modification, analysis, or optimization of a design.",
-                    "image": null
-                }
+                question: "What is the capital of France?",
+                options: ["Berlin", "Madrid", "Paris", "Rome"],
+                answer: "Paris"
             },
             {
-                "question": "Which of the following is NOT a type of gear?",
-                "questionImage": null,
-                "options": [
-                    { "text": "Spur Gear", "image": null },
-                    { "text": "Helical Gear", "image": null },
-                    { "text": "Bevel Gear", "image": null },
-                    { "text": "Piston Gear", "image": null }
-                ],
-                "correctAnswer": 3,
-                "solution": {
-                    "text": "A Piston is a component of reciprocating engines, pumps, etc. Spur, Helical, and Bevel are all common types of gears.",
-                    "image": null
-                }
+                question: "Which planet is known as the Red Planet?",
+                options: ["Earth", "Mars", "Jupiter", "Venus"],
+                answer: "Mars"
             },
             {
-                "question": "What type of stress is shown in this image?",
-                "questionImage": "https://placehold.co/600x300/eee/ccc?text=Image+of+Tensile+Stress",
-                "options": [
-                    { "text": "Tensile Stress (Pulling)", "image": null },
-                    { "text": "Compressive Stress (Pushing)", "image": null },
-                    { "text": "Shear Stress (Sliding)", "image": null }
-                ],
-                "correctAnswer": 0,
-                "solution": {
-                    "text": "Tensile stress (or tension) is the stress state leading to expansion; that is, the material is being pulled apart.",
-                    "image": null
-                }
+                question: "What is the largest ocean on Earth?",
+                options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+                answer: "Pacific Ocean"
             },
             {
-                "question": "Which of these is a 'ferrous' metal?",
-                "questionImage": null,
-                "options": [
-                    { "text": "Aluminum", "image": null },
-                    { "text": "Copper", "image": null },
-                    { "text": "Cast Iron", "image": "https://placehold.co/400x200/eee/ccc?text=Image+of+Cast+Iron" },
-                    { "text": "Titanium", "image": null }
-                ],
-                "correctAnswer": 2,
-                "solution": {
-                    "text": "Ferrous metals are those that contain iron (ferrum). Cast iron is an iron alloy. Aluminum, Copper, and Titanium are non-ferrous.",
-                    "image": "https://placehold.co/600x200/eee/ccc?text=Solution+Image+Example"
-                }
+                question: "What is 2 + 2 * 2?",
+                options: ["8", "6", "4", "2"],
+                answer: "6"
+            },
+            {
+                question: "Who wrote 'Hamlet'?",
+                options: ["Charles Dickens", "William Shakespeare", "Leo Tolstoy", "Mark Twain"],
+                answer: "William Shakespeare"
             }
-            // To add a new question, add a comma here and copy/paste one of the blocks above.
         ];
-        // --- END OF QUESTIONS BLOCK ---
+        // --- END OF QUESTIONS ---
 
+        // DOM Element References
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        
+        const questionNumberEl = document.getElementById('question-number');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsAreaEl = document.getElementById('options-area');
+        
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        const scoreTextEl = document.getElementById('score-text');
+        const solutionsAreaEl = document.getElementById('solutions-area');
 
-        // We use DOMContentLoaded, which fires when the HTML is ready.
-        // This is faster than window.onload.
+        // Quiz State
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let score = 0;
+
+        // --- FUNCTIONS ---
+
+        /**
+         * Loads and displays a question by its index.
+         */
+        function loadQuestion(index) {
+            const question = questions[index];
+            
+            questionNumberEl.textContent = `Question ${index + 1}/${questions.length}`;
+            questionTextEl.textContent = question.question;
+            
+            // Clear previous options
+            optionsAreaEl.innerHTML = '';
+            
+            // Create and append new options
+            question.options.forEach((option, i) => {
+                const optionId = `q${index}_option${i}`;
+                
+                // Create the radio input
+                const radioInput = document.createElement('input');
+                radioInput.type = 'radio';
+                radioInput.id = optionId;
+                radioInput.name = `question_${index}`;
+                radioInput.value = option;
+                
+                // Check if this answer was previously selected
+                if (userAnswers[index] === option) {
+                    radioInput.checked = true;
+                }
+                
+                // Add event listener to save answer on change
+                radioInput.addEventListener('change', () => {
+                    userAnswers[currentQuestionIndex] = option;
+                });
+                
+                // Create the label
+                const radioLabel = document.createElement('label');
+                radioLabel.htmlFor = optionId;
+                radioLabel.textContent = option;
+                radioLabel.className = 'radio-label block';
+                
+                // Append both to the options area
+                const optionWrapper = document.createElement('div');
+                optionWrapper.appendChild(radioInput);
+                optionWrapper.appendChild(radioLabel);
+                optionsAreaEl.appendChild(optionWrapper);
+            });
+            
+            // Update button visibility
+            updateNavigation();
+        }
+
+        /**
+         * Updates the visibility and state of navigation buttons.
+         */
+        function updateNavigation() {
+            // Previous button
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            // Next and Submit buttons
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+        
+        /**
+         * Moves to the next question.
+         */
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+            }
+        }
+        
+        /**
+         * Moves to the previous question.
+         */
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion(currentQuestionIndex);
+            }
+        }
+
+        /**
+         * Calculates score, shows results, and displays solutions.
+         */
+        function submitQuiz() {
+            // Calculate score
+            score = 0;
+            userAnswers.forEach((answer, index) => {
+                if (answer === questions[index].answer) {
+                    score++;
+                }
+            });
+            
+            // Display score
+            scoreTextEl.textContent = `Your Score: ${score} / ${questions.length}`;
+            
+            // Clear previous solutions
+            solutionsAreaEl.innerHTML = '';
+            
+            // Generate and display solutions
+            questions.forEach((question, index) => {
+                const solutionBlock = document.createElement('div');
+                solutionBlock.className = 'p-4 rounded-lg';
+                
+                const userAnswer = userAnswers[index];
+                const correctAnswer = question.answer;
+                const isCorrect = userAnswer === correctAnswer;
+                
+                solutionBlock.classList.add(isCorrect ? 'solution-correct' : 'solution-incorrect');
+                
+                solutionBlock.innerHTML = `
+                    <p class="font-semibold text-lg text-gray-100 mb-2">${index + 1}. ${question.question}</p>
+                    <p class="text-gray-200"><strong>Your Answer:</strong> ${userAnswer || 'Not Answered'}</p>
+                    ${!isCorrect ? `<p class="text-gray-200"><strong>Correct Answer:</strong> ${correctAnswer}</p>` : ''}
+                `;
+                
+                solutionsAreaEl.appendChild(solutionBlock);
+            });
+            
+            // Show results and hide quiz
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+        }
+
+        /**
+         * Resets the quiz to its initial state.
+         */
+        function restartQuiz() {
+            // Reset state
+            currentQuestionIndex = 0;
+            userAnswers.fill(null);
+            score = 0;
+            
+            // Show quiz and hide results
+            resultsContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            
+            // Load the first question
+            loadQuestion(0);
+        }
+
+        // --- EVENT LISTENERS ---
+        nextBtn.addEventListener('click', nextQuestion);
+        prevBtn.addEventListener('click', prevQuestion);
+        submitBtn.addEventListener('click', submitQuiz);
+        restartBtn.addEventListener('click', restartQuiz);
+
+        // --- INITIALIZATION ---
+        // Load the first question when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', () => {
-
-            // --- 1. GET DOM ELEMENTS ---
-            const loadingScreen = document.getElementById('loading-screen');
-            const quizScreen = document.getElementById('quiz-screen');
-            const resultsContainer = document.getElementById('results-container');
-            
-            const questionTextElement = document.getElementById('question-text');
-            const questionImageContainer = document.getElementById('question-image-container');
-            const answerButtonsElement = document.getElementById('answer-buttons');
-            
-            const submitButton = document.getElementById('submit-btn');
-            const restartButton = document.getElementById('restart-btn');
-            
-            const scoreText = document.getElementById('score-text');
-            const solutionsBody = document.getElementById('solutions-body');
-            
-            // --- Helper for screen elements ---
-            const screens = {
-                loading: loadingScreen,
-                quiz: quizScreen,
-                results: resultsContainer
-            };
-
-            // --- 2. QUIZ STATE VARIABLES ---
-            let currentQuizQuestions = [];
-            let currentQuestionIndex = 0;
-            let userAnswers = [];
-
-            // --- 3. INITIALIZATION ---
-            function init() {
-                // Check if the 'quizQuestions' variable exists
-                if (typeof quizQuestions === 'undefined' || quizQuestions.length === 0) {
-                    loadingScreen.innerHTML = "<h2>Error: No questions found.</h2><p>Please check the <code>quizQuestions</code> array at the top of the script.</p>";
-                    showScreen('loading'); // Keep the loading screen visible to show the error
-                    return;
-                }
-                
-                // Add a small delay so the loader is visible for a moment
-                // This feels more polished than an instant flash.
-                setTimeout(startQuiz, 500);
-            }
-            
-            function showScreen(screenName) {
-                // Hide all screens
-                Object.values(screens).forEach(screen => {
-                    screen.style.display = 'none';
-                    screen.classList.remove('is-visible');
-                });
-                
-                // Show the target screen
-                const targetScreen = screens[screenName];
-                if (targetScreen) {
-                    targetScreen.style.display = 'block';
-                    // Use a tiny timeout to ensure the animation runs
-                    setTimeout(() => {
-                         targetScreen.classList.add('is-visible');
-                    }, 10); 
-                }
-            }
-
-            // --- 4. QUIZ FUNCTIONS ---
-            
-            function startQuiz() {
-                currentQuizQuestions = quizQuestions;
-                userAnswers = new Array(currentQuizQuestions.length).fill(null);
-                currentQuestionIndex = 0;
-                
-                showScreen('quiz');
-                showQuestion(currentQuizQuestions[currentQuestionIndex]);
-            }
-
-            function showQuestion(question) {
-                const contentToAnimate = [quizHeader, answerButtonsElement];
-                
-                // 1. Fade out
-                contentToAnimate.forEach(el => el.style.opacity = 0);
-                
-                // 2. Wait for fade out, then update content
-                setTimeout(() => {
-                    // Set question text
-                    questionTextElement.textContent = `Q${currentQuestionIndex + 1}: ${question.question}`;
-                    
-                    // Handle Question Image
-                    questionImageContainer.innerHTML = '';
-                    if (question.questionImage) {
-                        const img = document.createElement('img');
-                        img.src = question.questionImage;
-                        img.alt = "Question image";
-                        questionImageContainer.appendChild(img);
-                    }
-
-                    // Clear old buttons
-                    answerButtonsElement.innerHTML = ''; 
-
-                    // Create new buttons for options
-                    question.options.forEach((option, index) => {
-                        const button = document.createElement('button');
-                        button.classList.add('btn');
-                        button.dataset.index = index;
-                        
-                        // Add answer text
-                        const textSpan = document.createElement('span');
-                        textSpan.textContent = option.text;
-                        button.appendChild(textSpan);
-                        
-                        // Add answer image if it exists
-                        if (option.image) {
-                            const img = document.createElement('img');
-                            img.src = option.image;
-                            img.alt = "Answer image";
-                            button.appendChild(img);
-                        }
-
-                        if (userAnswers[currentQuestionIndex] === index) {
-                            button.classList.add('selected');
-                        }
-
-                        button.addEventListener('click', selectAnswer);
-                        answerButtonsElement.appendChild(button);
-                    });
-
-                    // Update button text
-                    if (currentQuestionIndex === currentQuizQuestions.length - 1) {
-                        submitButton.textContent = "Submit Test";
-                    } else {
-                        submitButton.textContent = "Next";
-                    }
-                    
-                    // 3. Fade in new content
-                    contentToAnimate.forEach(el => {
-                        el.style.transition = 'opacity 0.3s ease-in-out';
-                        el.style.opacity = 1;
-                    });
-                }, 200); // 200ms matches the fade-out
-            }
-
-
-            function selectAnswer(e) {
-                const selectedButton = e.target.closest('.btn'); 
-                const selectedIndex = parseInt(selectedButton.dataset.index);
-                
-                userAnswers[currentQuestionIndex] = selectedIndex;
-
-                Array.from(answerButtonsElement.children).forEach(btn => {
-                    btn.classList.remove('selected');
-                });
-                selectedButton.classList.add('selected');
-            }
-
-            function handleSubmit() {
-                if (userAnswers[currentQuestionIndex] === null) {
-                    // A more modern "alert"
-                    const submitBtn = document.getElementById('submit-btn');
-                    const originalText = submitBtn.textContent;
-                    submitBtn.textContent = 'Please select an answer!';
-                    submitBtn.style.backgroundColor = '#e11d48'; // Red
-                    setTimeout(() => {
-                        submitBtn.textContent = originalText;
-                        submitBtn.style.backgroundColor = '';
-                    }, 2000);
-                    return;
-                }
-
-                if (currentQuestionIndex < currentQuizQuestions.length - 1) {
-                    currentQuestionIndex++;
-                    showQuestion(currentQuizQuestions[currentQuestionIndex]);
-                } else {
-                    showResults();
-                }
-            }
-
-            function showResults() {
-                let score = 0;
-                solutionsBody.innerHTML = ''; 
-
-                currentQuizQuestions.forEach((question, index) => {
-                    const userAnswerIndex = userAnswers[index];
-                    const correctAnswerIndex = question.correctAnswer;
-                    const isCorrect = userAnswerIndex === correctAnswerIndex;
-
-                    if (isCorrect) {
-                        score++;
-                    }
-
-                    const solutionElement = document.createElement('div');
-                    solutionElement.classList.add('solution');
-                    
-                    let solutionHTML = `<p><strong>Q${index + 1}: ${question.question}</strong></p>`;
-
-                    // Display user's answer
-                    const userAnswer = question.options[userAnswerIndex];
-                    if (isCorrect) {
-                        solutionHTML += `
-                            <p class="correct">Your answer: ${userAnswer ? userAnswer.text : 'No answer'}</p>
-                        `;
-                    } else {
-                        solutionHTML += `
-                            <p class="incorrect">Your answer: ${userAnswer ? userAnswer.text : 'No answer'}</p>
-                            <p class="correct">Correct answer: ${question.options[correctAnswerIndex].text}</p>
-                        `;
-                    }
-                    
-                    // Add solution text and image
-                    solutionHTML += `<p><em>${question.solution.text}</em></p>`;
-                    if (question.solution.image) {
-                        solutionHTML += `<img src="${question.solution.image}" alt="Solution image">`;
-                    }
-
-                    solutionElement.innerHTML = solutionHTML;
-                    solutionsBody.appendChild(solutionElement);
-                });
-
-                showScreen('results');
-                scoreText.textContent = `You scored ${score} out of ${currentQuizQuestions.length}.`;
-            }
-
-            // --- 5. EVENT LISTENERS ---
-            submitButton.addEventListener('click', handleSubmit);
-            restartButton.addEventListener('click', startQuiz);
-            
-            // --- 6. START THE APP ---
-            init(); // This will now run after the HTML is parsed.
+            loadQuestion(currentQuestionIndex);
         });
-    </script>
 
+    </script>
 </body>
 </html>
