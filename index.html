@@ -155,8 +155,8 @@
                 <!-- Solutions will be dynamically inserted here -->
             </div>
             
-            <button id="restart-btn" class="btn w-full mt-8 text-white font-bold py-3 px-5 rounded-lg">
-                Restart Quiz
+            <button id="download-btn" class="btn w-full mt-8 text-white font-bold py-3 px-5 rounded-lg">
+                Download Results
             </button>
         </div>
         
@@ -204,7 +204,7 @@
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
         const submitBtn = document.getElementById('submit-btn');
-        const restartBtn = document.getElementById('restart-btn');
+        const downloadBtn = document.getElementById('download-btn');
         
         const scoreTextEl = document.getElementById('score-text');
         const solutionsAreaEl = document.getElementById('solutions-area');
@@ -347,8 +347,43 @@
         }
 
         /**
+         * Generates a text file with the quiz results and triggers a download.
+         */
+        function downloadResults() {
+            let content = `QUIZ RESULTS\n\n`;
+            content += `Final Score: ${score} / ${questions.length}\n\n`;
+            content += `-------------------------\n`;
+            content += `DETAILED REVIEW\n`;
+            content += `-------------------------\n\n`;
+
+            questions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                const correctAnswer = question.answer;
+                const isCorrect = userAnswer === correctAnswer;
+
+                content += `Question ${index + 1}: ${question.question}\n`;
+                content += `Your Answer: ${userAnswer || 'Not Answered'}\n`;
+                if (!isCorrect) {
+                    content += `Correct Answer: ${correctAnswer}\n`;
+                }
+                content += `Status: ${isCorrect ? 'Correct' : 'Incorrect'}\n\n`;
+            });
+
+            // Create a blob and trigger download
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'quiz-results.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+        }
+
+        /**
          * Resets the quiz to its initial state.
          */
+        /*
         function restartQuiz() {
             // Reset state
             currentQuestionIndex = 0;
@@ -362,12 +397,13 @@
             // Load the first question
             loadQuestion(0);
         }
+        */
 
         // --- EVENT LISTENERS ---
         nextBtn.addEventListener('click', nextQuestion);
         prevBtn.addEventListener('click', prevQuestion);
         submitBtn.addEventListener('click', submitQuiz);
-        restartBtn.addEventListener('click', restartQuiz);
+        downloadBtn.addEventListener('click', downloadResults);
 
         // --- INITIALIZATION ---
         // Load the first question when the DOM is fully loaded
