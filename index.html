@@ -62,6 +62,23 @@
         input[type="radio"] {
             display: none;
         }
+        
+        /* Numerical Input Style */
+        .numerical-input {
+            background-color: rgba(55, 65, 81, 0.7); /* bg-gray-700 */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f3f4f6; /* text-gray-100 */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1rem;
+            width: 100%;
+            font-size: 1.125rem; /* text-lg */
+            transition: all 0.3s ease;
+        }
+        .numerical-input:focus {
+            outline: none;
+            border-color: rgba(59, 130, 246, 0.9);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
 
         /* Button styles */
         .btn {
@@ -126,9 +143,9 @@
                 <p class="text-lg md:text-xl text-gray-200" id="question-text">Loading question...</p>
             </div>
             
-            <!-- Options Area -->
+            <!-- Options/Input Area -->
             <div id="options-area" class="space-y-4 mb-8">
-                <!-- Options will be dynamically inserted here -->
+                <!-- Content will be dynamically inserted here -->
             </div>
             
             <!-- Navigation Buttons -->
@@ -166,29 +183,106 @@
         // --- EDIT YOUR QUESTIONS HERE ---
         const questions = [
             {
-                question: "What is the capital of France?",
-                options: ["Berlin", "Madrid", "Paris", "Rome"],
-                answer: "Paris"
+                type: 'mcq',
+                question: "In which of the following scenarios is *no* work done on the object, according to the physics definition?",
+                options: [
+                    "A person holding a 20 kg box stationary above their head.",
+                    "Pushing a box across a rough floor at a constant speed.",
+                    "Lifting a box from the floor to a table.",
+                    "A car braking to a stop."
+                ],
+                answer: "A person holding a 20 kg box stationary above their head.",
+                solution: "Work requires a force *and* a displacement in the direction of the force (W = F x s). Since the box is stationary, its displacement (s) is zero, and therefore no work is done."
             },
             {
-                question: "Which planet is known as the Red Planet?",
-                options: ["Earth", "Mars", "Jupiter", "Venus"],
-                answer: "Mars"
+                type: 'mcq',
+                question: "An object has a kinetic energy of KE. If its mass is doubled and its speed is halved, what will its new kinetic energy be?",
+                options: [
+                    "4 x KE",
+                    "2 x KE",
+                    "1/2 x KE",
+                    "KE (it stays the same)"
+                ],
+                answer: "1/2 x KE",
+                solution: "Original KE = (1/2)mv². New KE = (1/2)(2m)(v/2)² = (1/2)(2m)(v²/4) = (2/4) * (1/2)mv² = 1/2 * KE."
             },
             {
-                question: "What is the largest ocean on Earth?",
-                options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
-                answer: "Pacific Ocean"
+                type: 'mcq',
+                question: "A 1000 kg car accelerates from 10 m/s to 20 m/s. What is the total network done on the car?",
+                options: [
+                    "100,000 J",
+                    "200,000 J",
+                    "150,000 J",
+                    "300,000 J"
+                ],
+                answer: "150,000 J",
+                solution: "By the Work-Energy Theorem, Work = ΔKE = KE_final - KE_initial. KE_initial = 1/2 * 1000 * (10)² = 50,000 J. KE_final = 1/2 * 1000 * (20)² = 200,000 J. Work = 200,000 J - 50,000 J = 150,000 J."
             },
             {
-                question: "What is 2 + 2 * 2?",
-                options: ["8", "6", "4", "2"],
-                answer: "6"
+                type: 'mcq',
+                question: "A 2 kg ball is at rest at the top of a 10 m high building. Ignoring air resistance, what is its kinetic energy just before it hits the ground? (Use g = 9.8 m/s^2)",
+                options: [
+                    "98 J",
+                    "196 J",
+                    "20 J",
+                    "0 J"
+                ],
+                answer: "196 J",
+                solution: "By the Law of Conservation of Energy, the initial Potential Energy (PE) is converted into final Kinetic Energy (KE). PE_initial = mgh = 2 kg * 9.8 m/s² * 10 m = 196 J. Therefore, KE_final = 196 J."
             },
             {
-                question: "Who wrote 'Hamlet'?",
-                options: ["Charles Dickens", "William Shakespeare", "Leo Tolstoy", "Mark Twain"],
-                answer: "William Shakespeare"
+                type: 'mcq',
+                question: "Two people lift identical 50 kg blocks to the same height of 2 m. Person A takes 5 seconds, while Person B takes 10 seconds. Which statement is true?",
+                options: [
+                    "Person A does more work than Person B.",
+                    "Person B does more work than Person A.",
+                    "Both people do the same work, but Person A has more power.",
+                    "Both people do the same work and have the same power."
+                ],
+                answer: "Both people do the same work, but Person A has more power.",
+                solution: "Work done is the same for both (Work = mgh), as mass, gravity, and height are identical. Power is Work / time. Since Person A takes less time (5s) than Person B (10s), Person A develops more power."
+            },
+            {
+                type: 'mcq',
+                question: "A force is applied to an object, and the force vs. displacement graph is a straight line from (0 m, 0 N) to (5 m, 20 N). What is the total work done?",
+                options: [
+                    "100 J",
+                    "25 J",
+                    "50 J",
+                    "20 J"
+                ],
+                answer: "50 J",
+                solution: "Work done is the area under the Force-Displacement graph. In this case, the area is a triangle. Area = 1/2 * base * height = 1/2 * 5 m * 20 N = 50 J."
+            },
+            {
+                type: 'mcq',
+                question: "Which of the following is the commercial unit of electrical energy?",
+                options: [
+                    "Watt (W)",
+                    "Joule (J)",
+                    "Kilowatt (kW)",
+                    "Kilowatt-hour (kWh)"
+                ],
+                answer: "Kilowatt-hour (kWh)",
+                solution: "A Kilowatt-hour (kWh) is the unit of energy used for electrical billing. It measures the energy consumed by using one kilowatt of power for one hour. Watts (W) and Kilowatts (kW) are units of *power*."
+            },
+            {
+                type: 'numerical',
+                question: "A 60 kg person runs up a flight of stairs with a vertical height of 5 meters in 8 seconds. Calculate the power developed by the person in Watts. (Use g = 10 m/s²)",
+                answer: "375",
+                solution: "Work done against gravity = mgh = 60 kg * 10 m/s² * 5 m = 3000 J. Power = Work / time = 3000 J / 8 s = 375 W."
+            },
+            {
+                type: 'numerical',
+                question: "A 5 kg object's velocity changes from 2 m/s to 6 m/s. What is the net work done on the object in Joules?",
+                answer: "80",
+                solution: "By the Work-Energy Theorem, Work = ΔKE = KE_final - KE_initial. KE_initial = 1/2 * m * u² = 1/2 * 5 * (2)² = 10 J. KE_final = 1/2 * m * v² = 1/2 * 5 * (6)² = 90 J. Work = 90 J - 10 J = 80 J."
+            },
+            {
+                type: 'numerical',
+                question: "An electric motor with a power rating of 2 kW (2000 W) is used to lift a 100 kg mass. What is the minimum time it will take to lift the mass to a height of 10 meters in seconds? (Use g = 9.8 m/s²)",
+                answer: "4.9",
+                solution: "The work required is the gain in potential energy: Work = mgh = 100 kg * 9.8 m/s² * 10 m = 9800 J. Power = Work / time, so time = Work / Power = 9800 J / 2000 W = 4.9 seconds."
             }
         ];
         // --- END OF QUESTIONS ---
@@ -227,40 +321,54 @@
             
             // Clear previous options
             optionsAreaEl.innerHTML = '';
-            
-            // Create and append new options
-            question.options.forEach((option, i) => {
-                const optionId = `q${index}_option${i}`;
+
+            if (question.type === 'mcq') {
+                // Create and append radio buttons for MCQ
+                question.options.forEach((option, i) => {
+                    const optionId = `q${index}_option${i}`;
+                    
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.id = optionId;
+                    radioInput.name = `question_${index}`;
+                    radioInput.value = option;
+                    
+                    if (userAnswers[index] === option) {
+                        radioInput.checked = true;
+                    }
+                    
+                    radioInput.addEventListener('change', () => {
+                        userAnswers[currentQuestionIndex] = option;
+                    });
+                    
+                    const radioLabel = document.createElement('label');
+                    radioLabel.htmlFor = optionId;
+                    radioLabel.textContent = option;
+                    radioLabel.className = 'radio-label block';
+                    
+                    const optionWrapper = document.createElement('div');
+                    optionWrapper.appendChild(radioInput);
+                    optionWrapper.appendChild(radioLabel);
+                    optionsAreaEl.appendChild(optionWrapper);
+                });
+            } else if (question.type === 'numerical') {
+                // Create and append an input field for numerical questions
+                const numericalInput = document.createElement('input');
+                numericalInput.type = 'number';
+                numericalInput.id = `q${index}_input`;
+                numericalInput.className = 'numerical-input';
+                numericalInput.placeholder = 'Enter your answer...';
                 
-                // Create the radio input
-                const radioInput = document.createElement('input');
-                radioInput.type = 'radio';
-                radioInput.id = optionId;
-                radioInput.name = `question_${index}`;
-                radioInput.value = option;
-                
-                // Check if this answer was previously selected
-                if (userAnswers[index] === option) {
-                    radioInput.checked = true;
+                if (userAnswers[index] !== null) {
+                    numericalInput.value = userAnswers[index];
                 }
-                
-                // Add event listener to save answer on change
-                radioInput.addEventListener('change', () => {
-                    userAnswers[currentQuestionIndex] = option;
+
+                numericalInput.addEventListener('input', (e) => {
+                    userAnswers[currentQuestionIndex] = e.target.value;
                 });
                 
-                // Create the label
-                const radioLabel = document.createElement('label');
-                radioLabel.htmlFor = optionId;
-                radioLabel.textContent = option;
-                radioLabel.className = 'radio-label block';
-                
-                // Append both to the options area
-                const optionWrapper = document.createElement('div');
-                optionWrapper.appendChild(radioInput);
-                optionWrapper.appendChild(radioLabel);
-                optionsAreaEl.appendChild(optionWrapper);
-            });
+                optionsAreaEl.appendChild(numericalInput);
+            }
             
             // Update button visibility
             updateNavigation();
@@ -310,7 +418,21 @@
             // Calculate score
             score = 0;
             userAnswers.forEach((answer, index) => {
-                if (answer === questions[index].answer) {
+                const question = questions[index];
+                let isCorrect = false;
+
+                if (question.type === 'mcq') {
+                    if (answer === question.answer) {
+                        isCorrect = true;
+                    }
+                } else if (question.type === 'numerical') {
+                    // Use loose equality (==) to compare user's string/number input to the answer string
+                    if (answer != null && answer.trim() == question.answer) {
+                        isCorrect = true;
+                    }
+                }
+
+                if (isCorrect) {
                     score++;
                 }
             });
@@ -328,14 +450,25 @@
                 
                 const userAnswer = userAnswers[index];
                 const correctAnswer = question.answer;
-                const isCorrect = userAnswer === correctAnswer;
+                let isCorrect = false;
+
+                if (question.type === 'mcq') {
+                    isCorrect = userAnswer === correctAnswer;
+                } else if (question.type === 'numerical') {
+                    isCorrect = userAnswer != null && userAnswer.trim() == correctAnswer;
+                }
                 
                 solutionBlock.classList.add(isCorrect ? 'solution-correct' : 'solution-incorrect');
                 
-                solutionBlock.innerHTML = `
-                    <p class="font-semibold text-lg text-gray-100 mb-2">${index + 1}. ${question.question}</p>
+                let answerReviewHTML = `
                     <p class="text-gray-200"><strong>Your Answer:</strong> ${userAnswer || 'Not Answered'}</p>
                     ${!isCorrect ? `<p class="text-gray-200"><strong>Correct Answer:</strong> ${correctAnswer}</p>` : ''}
+                `;
+                
+                solutionBlock.innerHTML = `
+                    <p class="font-semibold text-lg text-gray-100 mb-2">${index + 1}. ${question.question}</p>
+                    ${answerReviewHTML}
+                    <p class="text-gray-300 mt-2 pt-2 border-t border-gray-600"><strong>Explanation:</strong> ${question.solution}</p>
                 `;
                 
                 solutionsAreaEl.appendChild(solutionBlock);
@@ -359,13 +492,15 @@
             questions.forEach((question, index) => {
                 const userAnswer = userAnswers[index];
                 const correctAnswer = question.answer;
-                const isCorrect = userAnswer === correctAnswer;
+                let isCorrect = false;
+
+                if (question.type === 'mcq') {
+                    isCorrect = userAnswer === correctAnswer;
+                } else if (question.type === 'numerical') {
+                    isCorrect = userAnswer != null && userAnswer.trim() == correctAnswer;
+                }
 
                 content += `Question ${index + 1}: ${question.question}\n`;
-                content += `Your Answer: ${userAnswer || 'Not Answered'}\n`;
-                if (!isCorrect) {
-                    content += `Correct Answer: ${correctAnswer}\n`;
-                }
                 content += `Status: ${isCorrect ? 'Correct' : 'Incorrect'}\n\n`;
             });
 
@@ -379,25 +514,6 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(a.href);
         }
-
-        /**
-         * Resets the quiz to its initial state.
-         */
-        /*
-        function restartQuiz() {
-            // Reset state
-            currentQuestionIndex = 0;
-            userAnswers.fill(null);
-            score = 0;
-            
-            // Show quiz and hide results
-            resultsContainer.classList.add('hidden');
-            quizContainer.classList.remove('hidden');
-            
-            // Load the first question
-            loadQuestion(0);
-        }
-        */
 
         // --- EVENT LISTENERS ---
         nextBtn.addEventListener('click', nextQuestion);
