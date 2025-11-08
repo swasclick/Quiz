@@ -22,12 +22,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-            100% { transform: scale(1); }
-        }
-
         /* --- General Styles --- */
         :root {
             --primary-color: #4f46e5; /* Indigo */
@@ -90,45 +84,7 @@
             animation: slideInUp 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* --- 1. Test Selection Menu --- */
-        #selection-screen {
-            padding: 32px;
-        }
-        #selection-screen h2 {
-            font-family: 'Manrope', sans-serif;
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-top: 0;
-            margin-bottom: 24px;
-            text-align: center;
-        }
-        #test-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        .test-btn {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 600;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 18px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s ease-out;
-            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
-        }
-        .test-btn:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 7px 20px rgba(79, 70, 229, 0.2);
-            animation: pop 0.3s ease;
-        }
-
-        /* --- 2. Quiz Screen --- */
+        /* --- 1. Quiz Screen (No longer has selection screen) --- */
         #quiz-header {
             padding: 32px 32px 24px 32px;
         }
@@ -195,28 +151,12 @@
             background-color: var(--light-bg);
             border-top: 1px solid var(--border-color);
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end; /* Changed from space-between */
             align-items: center;
         }
-        /* Generic button style for secondary actions */
-        .secondary-btn {
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            background-color: #fff;
-            color: var(--light-text);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 12px 24px;
-            cursor: pointer;
-            transition: all 0.2s ease-out;
-        }
-        .secondary-btn:hover {
-            background-color: var(--light-bg);
-            color: var(--dark-text);
-            border-color: #cdd2d8;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
+        
+        /* Removed .secondary-btn styles as back-btn is gone */
+        
         #submit-btn {
             font-family: 'Inter', sans-serif;
             font-size: 1rem;
@@ -235,7 +175,7 @@
             box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
         }
 
-        /* --- 3. Results Screen --- */
+        /* --- 2. Results Screen --- */
         #results-container {
             padding: 32px;
         }
@@ -311,7 +251,7 @@
             border-top: 1px solid var(--border-color);
             text-align: center;
         }
-        /* Re-using primary button style */
+        
         #restart-btn {
             font-family: 'Inter', sans-serif;
             font-size: 1rem;
@@ -333,20 +273,11 @@
 </head>
 <body>
 
-    <!-- Added Main Title -->
     <h1 class="main-title">Quiz Master</h1>
 
     <div id="app-container">
         
-        <!-- Screen 1: Test Selection Menu (Added .screen class) -->
-        <div id="selection-screen" class="screen">
-            <h2>Select a Test</h2>
-            <div id="test-list">
-                <!-- Buttons will be dynamically inserted here -->
-            </div>
-        </div>
-
-        <!-- Screen 2: The Quiz (Added .screen class) -->
+        <!-- Screen 1: The Quiz (Selection screen is removed) -->
         <div id="quiz-screen" class="screen">
             <div id="quiz-header">
                 <div id="question-image-container"></div>
@@ -356,20 +287,19 @@
                 <!-- Buttons will be dynamically inserted here -->
             </div>
             <div id="controls">
-                <!-- Applied new secondary-btn class -->
-                <button id="back-btn" class="secondary-btn">Main Menu</button>
+                <!-- Removed the "Main Menu" button -->
                 <button id="submit-btn">Next</button>
             </div>
         </div>
 
-        <!-- Screen 3: The Results (Added .screen class) -->
+        <!-- Screen 2: The Results -->
         <div id="results-container" class="screen">
             <h2>Your Results</h2>
             <p id="score-text">You scored 0 out of 0.</p>
             <h3>Solutions</h3>
             <div id="solutions-body"></div>
             <div id="results-controls">
-                <button id="restart-btn">Back to Main Menu</button>
+                <button id="restart-btn">Retake Test</button> <!-- Changed button text -->
             </div>
         </div>
 
@@ -386,8 +316,8 @@
         document.addEventListener('DOMContentLoaded', () => {
 
             // --- 1. GET DOM ELEMENTS ---
-            const selectionScreen = document.getElementById('selection-screen');
-            const testList = document.getElementById('test-list');
+            // const selectionScreen = document.getElementById('selection-screen'); // Removed
+            // const testList = document.getElementById('test-list'); // Removed
             const quizScreen = document.getElementById('quiz-screen');
             const resultsContainer = document.getElementById('results-container');
             
@@ -396,7 +326,7 @@
             const answerButtonsElement = document.getElementById('answer-buttons');
             
             const submitButton = document.getElementById('submit-btn');
-            const backButton = document.getElementById('back-btn');
+            // const backButton = document.getElementById('back-btn'); // Removed
             const restartButton = document.getElementById('restart-btn');
             
             const scoreText = document.getElementById('score-text');
@@ -404,7 +334,7 @@
             
             // --- Helper for screen elements ---
             const screens = {
-                selection: selectionScreen,
+                // selection: selectionScreen, // Removed
                 quiz: quizScreen,
                 results: resultsContainer
             };
@@ -414,33 +344,16 @@
             let currentQuestionIndex = 0;
             let userAnswers = [];
 
-            // --- 3. INITIALIZATION ---
+            // --- 3. INITIALIZATION (Simplified) ---
             function init() {
-                // Check if the 'allQuizData' variable exists from questions.js
-                if (typeof allQuizData === 'undefined') {
-                    selectionScreen.innerHTML = "<h2>Error: Could not load <code>questions.js</code></h2><p>Please make sure the file is in the same folder as <code>index.html</code>.</p>";
+                // Check if the 'quizQuestions' variable exists from questions.js
+                if (typeof quizQuestions === 'undefined' || quizQuestions.length === 0) {
+                    quizScreen.innerHTML = "<h2>Error: Could not load <code>questions.js</code></h2><p>Please make sure the file is in the same folder as <code>index.html</code> and is not empty.</p>";
                     return;
                 }
                 
-                // Create buttons for each test defined in questions.js
-                testList.innerHTML = ''; // Clear any loading text
-                const testKeys = Object.keys(allQuizData);
-                
-                if (testKeys.length === 0) {
-                     testList.innerHTML = "<p>No tests found in <code>questions.js</code>.</p>";
-                     return;
-                }
-
-                testKeys.forEach(testKey => {
-                    const button = document.createElement('button');
-                    button.textContent = allQuizData[testKey].title; // Use the 'title' from the data
-                    button.classList.add('test-btn');
-                    button.dataset.testKey = testKey; // Store the key (e.g., "test1")
-                    button.addEventListener('click', startQuiz);
-                    testList.appendChild(button);
-                });
-                
-                showScreen('selection');
+                // No menu to build, just start the quiz
+                startQuiz();
             }
             
             // *** UPDATED showScreen function for animations ***
@@ -464,9 +377,11 @@
             }
 
             // --- 4. QUIZ FUNCTIONS ---
-            function startQuiz(event) {
-                const testKey = event.target.dataset.testKey;
-                currentQuizQuestions = allQuizData[testKey].questions;
+            
+            // *** UPDATED startQuiz function ***
+            function startQuiz() {
+                // No event.target, just load the global 'quizQuestions'
+                currentQuizQuestions = quizQuestions;
                 userAnswers = new Array(currentQuizQuestions.length).fill(null);
                 currentQuestionIndex = 0;
                 
@@ -625,12 +540,13 @@
             // --- 5. EVENT LISTENERS ---
             submitButton.addEventListener('click', handleSubmit);
             
-            // Add listeners for the "Back to Menu" buttons
-            backButton.addEventListener('click', init);
-            restartButton.addEventListener('click', init);
+            // backButton listener removed
+            
+            // Restart button now calls startQuiz directly
+            restartButton.addEventListener('click', startQuiz);
             
             // --- 6. START THE APP ---
-            init();
+            init(); // This will now automatically start the quiz
         });
     </script>
 
