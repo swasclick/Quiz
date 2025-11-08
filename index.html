@@ -81,10 +81,10 @@
         .screen {
             display: none; /* All screens hidden by default */
             width: 100%;
-            animation: fadeIn 0.4s ease-out;
         }
         .screen.is-visible {
             display: block;
+            animation: fadeIn 0.4s ease-out; /* Use a consistent fade in */
         }
         
         /* --- New Loading Screen --- */
@@ -108,7 +108,7 @@
             animation: spin 1s linear infinite;
             margin: 0 auto;
         }
-        /* This will be shown by default, no .is-visible needed */
+        /* This will be shown by default */
         #loading-screen {
             display: block;
         }
@@ -300,8 +300,6 @@
 </head>
 <body>
 
-    <!-- Removed static h1 title -->
-
     <div id="app-container">
         
         <!-- Screen 0: Loading Screen (New) -->
@@ -337,18 +335,83 @@
 
     </div>
 
-    <!-- 
-      This is File 2. It MUST be in the same folder as this index.html file.
-    -->
-    <script src="questions.js"></script>
+    <!-- The <script src="questions.js"></script> is GONE -->
 
     <script>
-        // *** MOVED all logic inside window.onload ***
-        // This waits for ALL files, including questions.js, to load
-        window.addEventListener('load', () => {
+        // --- 1. YOUR QUESTIONS GO HERE ---
+        // This is the *only* block you need to edit.
+        // Just add new question objects {} to this 'quizQuestions' array.
+        const quizQuestions = [
+            {
+                "question": "What does 'CAD' stand for in CAD/CAM?",
+                "questionImage": null,
+                "options": [
+                    { "text": "Computer-Aided Design", "image": null },
+                    { "text": "Computer-Assisted Data", "image": null },
+                    { "text": "Computer-Algorithm Design", "image": null },
+                    { "text": "Control and Automation Device", "image": null }
+                ],
+                "correctAnswer": 0,
+                "solution": {
+                    "text": "'CAD' stands for Computer-Aided Design. It involves using computers to assist in the creation, modification, analysis, or optimization of a design.",
+                    "image": null
+                }
+            },
+            {
+                "question": "Which of the following is NOT a type of gear?",
+                "questionImage": null,
+                "options": [
+                    { "text": "Spur Gear", "image": null },
+                    { "text": "Helical Gear", "image": null },
+                    { "text": "Bevel Gear", "image": null },
+                    { "text": "Piston Gear", "image": null }
+                ],
+                "correctAnswer": 3,
+                "solution": {
+                    "text": "A Piston is a component of reciprocating engines, pumps, etc. Spur, Helical, and Bevel are all common types of gears.",
+                    "image": null
+                }
+            },
+            {
+                "question": "What type of stress is shown in this image?",
+                "questionImage": "https://placehold.co/600x300/eee/ccc?text=Image+of+Tensile+Stress",
+                "options": [
+                    { "text": "Tensile Stress (Pulling)", "image": null },
+                    { "text": "Compressive Stress (Pushing)", "image": null },
+                    { "text": "Shear Stress (Sliding)", "image": null }
+                ],
+                "correctAnswer": 0,
+                "solution": {
+                    "text": "Tensile stress (or tension) is the stress state leading to expansion; that is, the material is being pulled apart.",
+                    "image": null
+                }
+            },
+            {
+                "question": "Which of these is a 'ferrous' metal?",
+                "questionImage": null,
+                "options": [
+                    { "text": "Aluminum", "image": null },
+                    { "text": "Copper", "image": null },
+                    { "text": "Cast Iron", "image": "https://placehold.co/400x200/eee/ccc?text=Image+of+Cast+Iron" },
+                    { "text": "Titanium", "image": null }
+                ],
+                "correctAnswer": 2,
+                "solution": {
+                    "text": "Ferrous metals are those that contain iron (ferrum). Cast iron is an iron alloy. Aluminum, Copper, and Titanium are non-ferrous.",
+                    "image": "https://placehold.co/600x200/eee/ccc?text=Solution+Image+Example"
+                }
+            }
+            // To add a new question, add a comma here and copy/paste one of the blocks above.
+        ];
+        // --- END OF QUESTIONS BLOCK ---
+
+
+        // We use DOMContentLoaded, which fires when the HTML is ready.
+        // This is faster than window.onload.
+        document.addEventListener('DOMContentLoaded', () => {
 
             // --- 1. GET DOM ELEMENTS ---
-            const loadingScreen = document.getElementById('loading-screen'); // New
+            const loadingScreen = document.getElementById('loading-screen');
             const quizScreen = document.getElementById('quiz-screen');
             const resultsContainer = document.getElementById('results-container');
             
@@ -364,7 +427,7 @@
             
             // --- Helper for screen elements ---
             const screens = {
-                loading: loadingScreen, // New
+                loading: loadingScreen,
                 quiz: quizScreen,
                 results: resultsContainer
             };
@@ -374,35 +437,35 @@
             let currentQuestionIndex = 0;
             let userAnswers = [];
 
-            // --- 3. INITIALIZATION (Simplified) ---
+            // --- 3. INITIALIZATION ---
             function init() {
-                // Check if the 'quizQuestions' variable exists from questions.js
+                // Check if the 'quizQuestions' variable exists
                 if (typeof quizQuestions === 'undefined' || quizQuestions.length === 0) {
-                    // Show an error *inside* the loading screen area
-                    loadingScreen.innerHTML = "<h2>Error: Could not load <code>questions.js</code></h2><p>Please make sure the file is in the same folder as <code>index.html</code> and is not empty.</p>";
+                    loadingScreen.innerHTML = "<h2>Error: No questions found.</h2><p>Please check the <code>quizQuestions</code> array at the top of the script.</p>";
                     showScreen('loading'); // Keep the loading screen visible to show the error
                     return;
                 }
                 
-                // No menu to build, just start the quiz
-                startQuiz();
+                // Add a small delay so the loader is visible for a moment
+                // This feels more polished than an instant flash.
+                setTimeout(startQuiz, 500);
             }
             
-            // *** UPDATED showScreen function for animations ***
             function showScreen(screenName) {
-                // Hide all screens and remove animation class
+                // Hide all screens
                 Object.values(screens).forEach(screen => {
                     screen.style.display = 'none';
                     screen.classList.remove('is-visible');
                 });
                 
-                // Show the target screen and add animation class
+                // Show the target screen
                 const targetScreen = screens[screenName];
                 if (targetScreen) {
                     targetScreen.style.display = 'block';
+                    // Use a tiny timeout to ensure the animation runs
                     setTimeout(() => {
                          targetScreen.classList.add('is-visible');
-                    }, 10); // Tiny timeout to ensure animation runs
+                    }, 10); 
                 }
             }
 
@@ -567,7 +630,7 @@
             restartButton.addEventListener('click', startQuiz);
             
             // --- 6. START THE APP ---
-            init(); // This will now run after questions.js is loaded
+            init(); // This will now run after the HTML is parsed.
         });
     </script>
 
