@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Quiz</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        #quiz-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            width: 90%;
+            max-width: 600px;
+            overflow: hidden;
+        }
+        #quiz-header {
+            padding: 24px;
+        }
+        #question-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        #answer-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 0 24px 24px;
+        }
+        .btn {
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            background-color: #f0f0f0;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 14px;
+            cursor: pointer;
+            text-align: left;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .btn:hover {
+            background-color: #e6e6e6;
+            border-color: #c0c0c0;
+        }
+        .btn.selected {
+            background-color: #dbeafe;
+            border-color: #60a5fa;
+            color: #1e40af;
+        }
+        #controls {
+            padding: 24px;
+            background-color: #fafafa;
+            border-top: 1px solid #eee;
+            text-align: right;
+        }
+        #submit-btn {
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #submit-btn:hover {
+            background-color: #1d4ed8;
+        }
+        #results-container {
+            padding: 24px;
+        }
+        #results-container h2 {
+            margin-top: 0;
+        }
+        .solution {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .solution p {
+            margin: 0 0 8px 0;
+        }
+        .correct {
+            color: #16a34a;
+            font-weight: 600;
+        }
+        .incorrect {
+            color: #dc2626;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="quiz-container">
+        <div id="quiz-header">
+            <h2 id="question-text">Question goes here</h2>
+        </div>
+        <div id="answer-buttons">
+            </div>
+        <div id="controls">
+            <button id="submit-btn">Submit Test</button>
+        </div>
+        <div id="results-container" style="display: none;">
+            <h2>Your Results</h2>
+            <p id="score-text">You scored 0 out of 0.</p>
+            <h3>Solutions</h3>
+            <div id="solutions-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. YOUR QUESTIONS ---
+        // Add your questions, options, and correct answer (index) here.
+        const quizQuestions = [
+            {
+                question: "What does 'CAD' stand for in CAD/CAM?",
+                options: [
+                    "Computer-Aided Design",
+                    "Computer-Assisted Data",
+                    "Computer-Algorithm Design",
+                    "Control and Automation Device"
+                ],
+                correctAnswer: 0,
+                solution: "'CAD' stands for Computer-Aided Design. It involves using computers to assist in the creation, modification, analysis, or optimization of a design."
+            },
+            {
+                question: "Which of the following is NOT a type of gear?",
+                options: [
+                    "Spur Gear",
+                    "Helical Gear",
+                    "Bevel Gear",
+                    "Piston Gear"
+                ],
+                correctAnswer: 3,
+                solution: "A Piston is a component of reciprocating engines, pumps, etc. Spur, Helical, and Bevel are all common types of gears used to transmit motion and power."
+            },
+            {
+                question: "What is the primary purpose of a 'bearing' in a machine?",
+                options: [
+                    "To increase friction",
+                    "To generate heat",
+                    "To reduce friction between moving parts",
+                    "To connect two static parts"
+                ],
+                correctAnswer: 2,
+                solution: "Bearings are mechanical elements that constrain relative motion to only the desired motion, and they reduce friction between moving parts."
+            }
+        ];
+        // --------------------------
+
+        const questionTextElement = document.getElementById('question-text');
+        const answerButtonsElement = document.getElementById('answer-buttons');
+        const submitButton = document.getElementById('submit-btn');
+        const resultsContainer = document.getElementById('results-container');
+        const scoreText = document.getElementById('score-text');
+        const solutionsBody = document.getElementById('solutions-body');
+        const quizHeader = document.getElementById('quiz-header');
+
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(quizQuestions.length).fill(null);
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            submitButton.textContent = "Next";
+            showQuestion(quizQuestions[currentQuestionIndex]);
+        }
+
+        function showQuestion(question) {
+            questionTextElement.textContent = `Q${currentQuestionIndex + 1}: ${question.question}`;
+            answerButtonsElement.innerHTML = ''; // Clear old buttons
+
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('btn');
+                button.dataset.index = index;
+                
+                // Highlight if it was the selected answer
+                if (userAnswers[currentQuestionIndex] === index) {
+                    button.classList.add('selected');
+                }
+
+                button.addEventListener('click', selectAnswer);
+                answerButtonsElement.appendChild(button);
+            });
+
+            // Update button text on the last question
+            if (currentQuestionIndex === quizQuestions.length - 1) {
+                submitButton.textContent = "Submit Test";
+            } else {
+                submitButton.textContent = "Next";
+            }
+        }
+
+        function selectAnswer(e) {
+            const selectedButton = e.target;
+            const selectedIndex = parseInt(selectedButton.dataset.index);
+            
+            // Store the user's answer
+            userAnswers[currentQuestionIndex] = selectedIndex;
+
+            // Update visual selection
+            Array.from(answerButtonsElement.children).forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            selectedButton.classList.add('selected');
+        }
+
+        function handleSubmit() {
+            // Check if an answer was selected
+            if (userAnswers[currentQuestionIndex] === null) {
+                alert("Please select an answer before proceeding.");
+                return;
+            }
+
+            // Move to the next question
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion(quizQuestions[currentQuestionIndex]);
+            } else {
+                // End of quiz - show results
+                showResults();
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            solutionsBody.innerHTML = ''; // Clear old solutions
+
+            quizQuestions.forEach((question, index) => {
+                const userAnswerIndex = userAnswers[index];
+                const correctAnswerIndex = question.correctAnswer;
+                const isCorrect = userAnswerIndex === correctAnswerIndex;
+
+                if (isCorrect) {
+                    score++;
+                }
+
+                // Create solution block
+                const solutionElement = document.createElement('div');
+                solutionElement.classList.add('solution');
+
+                let solutionHTML = `
+                    <p><strong>Q${index + 1}: ${question.question}</strong></p>
+                `;
+
+                if (isCorrect) {
+                    solutionHTML += `
+                        <p class="correct">Your answer: ${question.options[userAnswerIndex]}</p>
+                    `;
+                } else {
+                    solutionHTML += `
+                        <p class="incorrect">Your answer: ${userAnswerIndex === null ? 'No answer' : question.options[userAnswerIndex]}</p>
+                        <p class="correct">Correct answer: ${question.options[correctAnswerIndex]}</p>
+                    `;
+                }
+                
+                solutionHTML += `<p><em>${question.solution}</em></p>`;
+                solutionElement.innerHTML = solutionHTML;
+                solutionsBody.appendChild(solutionElement);
+            });
+
+            // Hide quiz, show results
+            quizHeader.style.display = 'none';
+            answerButtonsElement.style.display = 'none';
+            document.getElementById('controls').style.display = 'none';
+            resultsContainer.style.display = 'block';
+
+            scoreText.textContent = `You scored ${score} out of ${quizQuestions.length}.`;
+        }
+
+        submitButton.addEventListener('click', handleSubmit);
+        startQuiz();
+    </script>
+
+</body>
+</html>
