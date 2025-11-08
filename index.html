@@ -182,109 +182,145 @@
     <script>
         // --- EDIT YOUR QUESTIONS HERE ---
         const questions = [
-            {
-                type: 'mcq',
-                question: "In which of the following scenarios is *no* work done on the object, according to the physics definition?",
-                options: [
-                    "A person holding a 20 kg box stationary above their head.",
-                    "Pushing a box across a rough floor at a constant speed.",
-                    "Lifting a box from the floor to a table.",
-                    "A car braking to a stop."
-                ],
-                answer: "A person holding a 20 kg box stationary above their head.",
-                solution: "Work requires a force *and* a displacement in the direction of the force (W = F x s). Since the box is stationary, its displacement (s) is zero, and therefore no work is done."
-            },
-            {
-                type: 'mcq',
-                question: "An object has a kinetic energy of KE. If its mass is doubled and its speed is halved, what will its new kinetic energy be?",
-                options: [
-                    "4 x KE",
-                    "2 x KE",
-                    "1/2 x KE",
-                    "KE (it stays the same)"
-                ],
-                answer: "1/2 x KE",
-                solution: "Original KE = (1/2)mv². New KE = (1/2)(2m)(v/2)² = (1/2)(2m)(v²/4) = (2/4) * (1/2)mv² = 1/2 * KE."
-            },
-            {
-                type: 'mcq',
-                question: "A 1000 kg car accelerates from 10 m/s to 20 m/s. What is the total network done on the car?",
-                options: [
-                    "100,000 J",
-                    "200,000 J",
-                    "150,000 J",
-                    "300,000 J"
-                ],
-                answer: "150,000 J",
-                solution: "By the Work-Energy Theorem, Work = ΔKE = KE_final - KE_initial. KE_initial = 1/2 * 1000 * (10)² = 50,000 J. KE_final = 1/2 * 1000 * (20)² = 200,000 J. Work = 200,000 J - 50,000 J = 150,000 J."
-            },
-            {
-                type: 'mcq',
-                question: "A 2 kg ball is at rest at the top of a 10 m high building. Ignoring air resistance, what is its kinetic energy just before it hits the ground? (Use g = 9.8 m/s^2)",
-                options: [
-                    "98 J",
-                    "196 J",
-                    "20 J",
-                    "0 J"
-                ],
-                answer: "196 J",
-                solution: "By the Law of Conservation of Energy, the initial Potential Energy (PE) is converted into final Kinetic Energy (KE). PE_initial = mgh = 2 kg * 9.8 m/s² * 10 m = 196 J. Therefore, KE_final = 196 J."
-            },
-            {
-                type: 'mcq',
-                question: "Two people lift identical 50 kg blocks to the same height of 2 m. Person A takes 5 seconds, while Person B takes 10 seconds. Which statement is true?",
-                options: [
-                    "Person A does more work than Person B.",
-                    "Person B does more work than Person A.",
-                    "Both people do the same work, but Person A has more power.",
-                    "Both people do the same work and have the same power."
-                ],
-                answer: "Both people do the same work, but Person A has more power.",
-                solution: "Work done is the same for both (Work = mgh), as mass, gravity, and height are identical. Power is Work / time. Since Person A takes less time (5s) than Person B (10s), Person A develops more power."
-            },
-            {
-                type: 'mcq',
-                question: "A force is applied to an object, and the force vs. displacement graph is a straight line from (0 m, 0 N) to (5 m, 20 N). What is the total work done?",
-                options: [
-                    "100 J",
-                    "25 J",
-                    "50 J",
-                    "20 J"
-                ],
-                answer: "50 J",
-                solution: "Work done is the area under the Force-Displacement graph. In this case, the area is a triangle. Area = 1/2 * base * height = 1/2 * 5 m * 20 N = 50 J."
-            },
-            {
-                type: 'mcq',
-                question: "Which of the following is the commercial unit of electrical energy?",
-                options: [
-                    "Watt (W)",
-                    "Joule (J)",
-                    "Kilowatt (kW)",
-                    "Kilowatt-hour (kWh)"
-                ],
-                answer: "Kilowatt-hour (kWh)",
-                solution: "A Kilowatt-hour (kWh) is the unit of energy used for electrical billing. It measures the energy consumed by using one kilowatt of power for one hour. Watts (W) and Kilowatts (kW) are units of *power*."
-            },
-            {
-                type: 'numerical',
-                question: "A 60 kg person runs up a flight of stairs with a vertical height of 5 meters in 8 seconds. Calculate the power developed by the person in Watts. (Use g = 10 m/s²)",
-                answer: "375",
-                solution: "Work done against gravity = mgh = 60 kg * 10 m/s² * 5 m = 3000 J. Power = Work / time = 3000 J / 8 s = 375 W."
-            },
-            {
-                type: 'numerical',
-                question: "A 5 kg object's velocity changes from 2 m/s to 6 m/s. What is the net work done on the object in Joules?",
-                answer: "80",
-                solution: "By the Work-Energy Theorem, Work = ΔKE = KE_final - KE_initial. KE_initial = 1/2 * m * u² = 1/2 * 5 * (2)² = 10 J. KE_final = 1/2 * m * v² = 1/2 * 5 * (6)² = 90 J. Work = 90 J - 10 J = 80 J."
-            },
-            {
-                type: 'numerical',
-                question: "An electric motor with a power rating of 2 kW (2000 W) is used to lift a 100 kg mass. What is the minimum time it will take to lift the mass to a height of 10 meters in seconds? (Use g = 9.8 m/s²)",
-                answer: "4.9",
-                solution: "The work required is the gain in potential energy: Work = mgh = 100 kg * 9.8 m/s² * 10 m = 9800 J. Power = Work / time, so time = Work / Power = 9800 J / 2000 W = 4.9 seconds."
-            }
-        ];
+    {
+        type: 'mcq',
+        question: "In which of the following scenarios is *negative* work being done by the specified force?",
+        options: [
+            "The force of gravity on a rocket as it accelerates upwards.",
+            "The force from a person's hand holding a 5 kg bag stationary.",
+            "The force of a bat on a ball, as the ball flies away.",
+            "The force of gravity on a person walking on a flat horizontal road."
+        ],
+        answer: "The force of gravity on a rocket as it accelerates upwards.",
+        solution: "Negative work is done when the force is in the opposite direction to the displacement. Gravity pulls down, but the rocket's displacement is upwards. Holding a bag (b) or walking horizontally (d) involves zero work by gravity as displacement is zero or perpendicular. The bat (c) does positive work."
+    },
+    {
+        type: 'mcq',
+        question: "An object has a kinetic energy of KE. If its mass is doubled and its speed is also doubled, what will its new kinetic energy be?",
+        options: [
+            "2 x KE",
+            "4 x KE",
+            "8 x KE",
+            "16 x KE"
+        ],
+        answer: "8 x KE",
+        solution: "Original KE = (1/2)mv². New KE = (1/2)(2m)(2v)² = (1/2)(2m)(4v²) = (2 * 4) * (1/2)mv² = 8 * KE."
+    },
+    {
+        type: 'mcq',
+        question: "A 20 kg object is moving at 5 m/s. A net force acts on it, causing it to speed up to 10 m/s. What is the total network done on the object?",
+        options: [
+            "250 J",
+            "500 J",
+            "750 J",
+            "1000 J"
+        ],
+        answer: "750 J",
+        solution: "Work = ΔKE = KE_final - KE_initial. KE_initial = 1/2 * 20 * (5)² = 250 J. KE_final = 1/2 * 20 * (10)² = 1000 J. Work = 1000 J - 250 J = 750 J."
+    },
+    {
+        type: 'mcq',
+        question: "A 4 kg object is lifted from the ground to a height of 2 m. What is its gain in gravitational potential energy? (Use g = 9.8 m/s²)",
+        options: [
+            "8 J",
+            "19.6 J",
+            "39.2 J",
+            "78.4 J"
+        ],
+        answer: "78.4 J",
+        solution: "Potential Energy (PE) = mgh = 4 kg * 9.8 m/s² * 2 m = 78.4 J."
+    },
+    {
+        type: 'mcq',
+        question: "A 500 N motor lifts a 2000 N load to a height of 10 m in 20 seconds. What is the average power developed by the motor?",
+        options: [
+            "1000 W",
+            "2000 W",
+            "5000 W",
+            "40,000 W"
+        ],
+        answer: "1000 W",
+        solution: "The motor's weight (500 N) is irrelevant. Work done is on the load. Work = Force * distance = 2000 N * 10 m = 20,000 J. Power = Work / time = 20,000 J / 20 s = 1000 W."
+    },
+    {
+        type: 'mcq',
+        question: "A 1 kg ball is dropped from rest from a height of 40 m. At a height of 10 m from the ground, what is its kinetic energy? (Ignore air resistance, use g = 10 m/s²)",
+        options: [
+            "100 J",
+            "300 J",
+            "400 J",
+            "500 J"
+        ],
+        answer: "300 J",
+        solution: "By conservation of energy, the loss in PE is converted to KE. PE_lost = mg(h_initial - h_final) = 1 * 10 * (40 - 10) = 1 * 10 * 30 = 300 J. This lost PE becomes KE."
+    },
+    {
+        type: 'mcq',
+        question: "Which of the following is the standard (SI) unit of Power?",
+        options: [
+            "Joule (J)",
+            "Kilowatt-hour (kWh)",
+            "Newton-meter (Nm)",
+            "Watt (W)"
+        ],
+        answer: "Watt (W)",
+        solution: "The SI unit of Power is the Watt (W), which is defined as one Joule (J) of work done per second (J/s). Joule and Newton-meter are units of Energy/Work, and kWh is a commercial unit of energy."
+    },
+    {
+        type: 'mcq',
+        question: "A roller coaster car is at rest at the top of its first hill. As it goes down the hill, what energy conversion occurs? (Ignoring friction)",
+        options: [
+            "Kinetic energy is converted to potential energy.",
+            "Potential energy is converted to kinetic energy.",
+            "Both kinetic and potential energy increase.",
+            "Both kinetic and potential energy decrease."
+        ],
+        answer: "Potential energy is converted to kinetic energy.",
+        solution: "At the top, the car has maximum potential energy (PE) and zero kinetic energy (KE). As it falls, its height (h) decreases, so PE (mgh) decreases, and its speed (v) increases, so KE (1/2mv²) increases."
+    },
+    {
+        type: 'numerical',
+        question: "A student pushes a stationary boulder with a force of 500 N for 10 seconds, but the boulder does not move. How much work, in Joules, is done *on the boulder*?",
+        answer: "0",
+        solution: "Work (W) is defined as Force (F) times displacement (s), W = F * s. Since the boulder does not move, its displacement is 0 meters. Therefore, the work done on the boulder is 500 N * 0 m = 0 J."
+    },
+    {
+        type: 'numerical',
+        question: "An object is thrown at an angle, and it follows a curved path, landing at the same height it was thrown from. What is the total work done on the object *by the force of gravity* during its entire flight, in Joules?",
+        answer: "0",
+        solution: "Work done by gravity depends on the *vertical* displacement (W = mgh). Since the object starts and ends at the same height, its net vertical displacement is zero. Therefore, the total work done by gravity is 0 J."
+    },
+    {
+        type: 'numerical',
+        question: "A 1500 kg car is traveling at 72 km/h. The brakes are applied, and it skids to a complete stop. What is the total work done *by the force of friction* to stop the car, in Joules?",
+        answer: "-300000",
+        solution: "Work done by friction equals the change in kinetic energy (Work-Energy Theorem). First, convert 72 km/h to m/s: 72 * (1000m / 3600s) = 20 m/s. Initial KE = 1/2 * m * v² = 0.5 * 1500 * (20)² = 300,000 J. Final KE = 0. Work = ΔKE = KE_final - KE_initial = 0 - 300,000 J = -300,000 J."
+    },
+    {
+        type: 'numerical',
+        question: "An electric motor is rated at 500 W. How much time (in seconds) would it take to lift a 25 kg mass to a vertical height of 10 m? (Use g = 9.8 m/s²)",
+        answer: "4.9",
+        solution: "The work required is the gain in potential energy: Work = mgh = 25 kg * 9.8 m/s² * 10 m = 2450 J. Power is Work / time, so time = Work / Power = 2450 J / 500 W = 4.9 seconds."
+    },
+    {
+        type: 'numerical',
+        question: "A 40 kg mass is raised to a height of 5 m. If it is allowed to fall, what will its kinetic energy be when it is at a height of 2 m from the ground, in Joules? (Use g = 10 m/s²)",
+        answer: "1200",
+        solution: "Total mechanical energy is conserved. Initial PE (at 5m) = mgh = 40 * 10 * 5 = 2000 J. This is the total energy. At 2m, the PE = mgh = 40 * 10 * 2 = 800 J. The rest of the energy must be KE. KE = Total Energy - PE (at 2m) = 2000 J - 800 J = 1200 J."
+    },
+    {
+        type: 'numerical',
+        question: "A television with a power rating of 250 W is used for 4 hours every day. How much energy (in kWh) does it consume in a month of 30 days?",
+        answer: "30",
+        solution: "Power in kW = 250 W / 1000 = 0.25 kW. Energy per day = Power (kW) * time (h) = 0.25 kW * 4 h = 1 kWh. Total energy in 30 days = 1 kWh/day * 30 days = 30 kWh."
+    },
+    {
+        type: 'numerical',
+        question: "A 2 kg object has a momentum of 10 kg·m/s. A 32 kg object has the same kinetic energy. What is the momentum of the 32 kg object, in kg·m/s?",
+        answer: "40",
+        solution: "Kinetic Energy KE = p² / (2m). For the 2kg object, KE = (10)² / (2*2) = 100 / 4 = 25 J. The 32kg object has the same KE (25 J). So, for the 32kg object: 25 = p² / (2*32) = p² / 64. This gives p² = 25 * 64 = 1600. Therefore, p = sqrt(1600) = 40 kg·m/s."
+    }
+];
         // --- END OF QUESTIONS ---
 
         // DOM Element References
