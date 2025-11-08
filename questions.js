@@ -1,8 +1,6 @@
 // This global variable holds all your quiz data.
 // 'index.html' will read this variable.
 const allQuizData = {
-
-    "test1": {
         "title": "Mechanical Basics Test",
         "questions": [
             {
@@ -36,42 +34,6 @@ const allQuizData = {
                 }
             }
         ]
-    },
-
-    "test2": {
-        "title": "Image & Materials Test",
-        "questions": [
-            {
-                "question": "What type of stress is shown in this image?",
-                "questionImage": "https://placehold.co/600x300/eee/ccc?text=Image+of+Tensile+Stress",
-                "options": [
-                    { "text": "Tensile Stress (Pulling)", "image": null },
-                    { "text": "Compressive Stress (Pushing)", "image": null },
-                    { "text": "Shear Stress (Sliding)", "image": null }
-                ],
-                "correctAnswer": 0,
-                "solution": {
-                    "text": "Tensile stress (or tension) is the stress state leading to expansion; that is, the material is being pulled apart.",
-                    "image": null
-                }
-            },
-            {
-                "question": "Which of these is a 'ferrous' metal?",
-                "questionImage": null,
-                "options": [
-                    { "text": "Aluminum", "image": null },
-                    { "text": "Copper", "image": null },
-                    { "text": "Cast Iron", "image": "https://placehold.co/400x200/eee/ccc?text=Image+of+Cast+Iron" },
-                    { "text": "Titanium", "image": null }
-                ],
-                "correctAnswer": 2,
-                "solution": {
-                    "text": "Ferrous metals are those that contain iron (ferrum). Cast iron is an iron alloy. Aluminum, Copper, and Titanium are non-ferrous.",
-                    "image": "https://placehold.co/600x200/eee/ccc?text=Solution+Image+Example"
-                }
-            }
-        ]
-    }
 
     // To add a new test, add a comma here and copy the "test2" block.
     // "test3": { ... }
